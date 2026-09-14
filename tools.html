@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Tools — The Tool Ledger</title>
+<meta name="description" content="A directory of 100+ AI tools, organized by category, with what each one is for.">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .tools-toolbar{
+    margin:6px 0 30px 0;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .search-input{
+    width:100%;
+    padding:11px 14px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--paper-light);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:0.95rem;
+    color:var(--ink);
+  }
+  .search-input:focus-visible{outline:2px solid var(--amber); outline-offset:1px;}
+  .cat-filters{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .cat-btn{
+    border:1px solid var(--line);
+    background:var(--paper-light);
+    color:var(--slate);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:0.82rem;
+    padding:6px 13px;
+    border-radius:99px;
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .cat-btn:hover{border-color:var(--amber); color:var(--ink);}
+  .cat-btn.active{
+    background:var(--ink);
+    color:var(--paper-light);
+    border-color:var(--ink);
+  }
+  .count-line{
+    color:var(--slate);
+    font-size:0.85rem;
+    margin-bottom:22px;
+  }
+  .tools-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+    gap:16px;
+    padding-bottom:70px;
+  }
+  .tool-card{
+    background:var(--paper-light);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    opacity:0;
+    transform:translateY(12px);
+    transition:opacity .4s ease, transform .4s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .tool-card.is-visible{opacity:1; transform:translateY(0);}
+  .tool-card:hover{
+    box-shadow:0 10px 24px rgba(22,35,47,0.10);
+    border-color:rgba(184,122,30,0.45);
+    transform:translateY(-3px);
+  }
+  .tool-card .cat-tag{
+    font-size:0.7rem;
+    color:var(--amber);
+    margin-bottom:6px;
+    display:block;
+  }
+  .tool-card h3{
+    font-family:'Fraunces', serif;
+    font-size:1.08rem;
+    margin:0 0 6px 0;
+  }
+  .tool-card h3 a{color:var(--ink);}
+  .tool-card h3 a:hover{color:var(--amber);}
+  .tool-card p{
+    font-size:0.88rem;
+    color:var(--slate);
+    margin:0 0 10px 0;
+  }
+  .tool-card .visit{
+    font-size:0.82rem;
+    position:relative;
+  }
+  .no-results{
+    color:var(--slate);
+    padding:30px 0;
+    display:none;
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="row">
+      <div>
+        <div class="brand">The Tool <span>Ledger</span></div>
+        <div class="tagline">A directory of 100+ AI tools, organized by category.</div>
+      </div>
+      <nav class="sitenav">
+        <a href="index.html">Log</a>
+        <a href="tools.html">All Tools</a>
+        <a href="prompts.html">Best Prompts</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" style="padding-top:38px;">
+  <div class="tools-toolbar">
+    <input class="search-input" type="text" id="search" placeholder="Search tools by name or description...">
+    <div class="cat-filters" id="cat-filters"></div>
+  </div>
+  <div class="count-line" id="count-line"></div>
+  <div class="tools-grid" id="grid"></div>
+  <p class="no-results" id="no-results">No tools match that search.</p>
+</main>
+
+<footer class="wrap">
+  <span>&copy; 2026 The Tool Ledger.</span>
+  <span><a href="about.html">About</a> · <a href="privacy.html">Privacy Policy</a> · <a href="disclaimer.html">Disclaimer</a> · <a href="contact.html">Contact</a></span>
+</footer>
+
+<script src="tools.js"></script>
+<script>
+  const grid = document.getElementById('grid');
+  const filtersEl = document.getElementById('cat-filters');
+  const countLine = document.getElementById('count-line');
+  const noResults = document.getElementById('no-results');
+  const searchInput = document.getElementById('search');
+
+  const categories = ['All', ...new Set(TOOLS.map(t => t.category))];
+  let activeCategory = 'All';
+
+  categories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn' + (cat === 'All' ? ' active' : '');
+    btn.textContent = cat;
+    btn.addEventListener('click', () => {
+      activeCategory = cat;
+      [...filtersEl.children].forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      render();
+    });
+    filtersEl.appendChild(btn);
+  });
+
+  const observer = new IntersectionObserver((items) => {
+    items.forEach(item => {
+      if (item.isIntersecting) {
+        item.target.classList.add('is-visible');
+        observer.unobserve(item.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  function render(){
+    const q = searchInput.value.trim().toLowerCase();
+    const filtered = TOOLS.filter(t => {
+      const matchesCat = activeCategory === 'All' || t.category === activeCategory;
+      const matchesQuery = !q || t.name.toLowerCase().includes(q) || t.description.toLowerCase().includes(q);
+      return matchesCat && matchesQuery;
+    });
+
+    grid.innerHTML = '';
+    countLine.textContent = `${filtered.length} tool${filtered.length === 1 ? '' : 's'}${activeCategory !== 'All' ? ' in ' + activeCategory : ''}`;
+    noResults.style.display = filtered.length ? 'none' : 'block';
+
+    filtered.forEach(t => {
+      const card = document.createElement('div');
+      card.className = 'tool-card';
+      card.innerHTML = `
+        <span class="cat-tag">${t.category}</span>
+        <h3><a href="${t.url}" target="_blank" rel="noopener noreferrer">${t.name}</a></h3>
+        <p>${t.description}</p>
+        <a class="tool-link visit" href="${t.url}" target="_blank" rel="noopener noreferrer">Visit site &rarr;</a>
+      `;
+      grid.appendChild(card);
+      observer.observe(card);
+    });
+  }
+
+  searchInput.addEventListener('input', render);
+  render();
+</script>
+
+</body>
+</html>
