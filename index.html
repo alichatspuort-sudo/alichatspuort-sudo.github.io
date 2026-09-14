@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Tool Ledger — A daily record of AI tools and prompts</title>
+<meta name="description" content="One AI tool explained, and the exact prompts to use with it — a new entry added every day.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="row">
+      <div>
+        <div class="brand">The Tool <span>Ledger</span></div>
+        <div class="tagline">One AI tool, explained in plain language, with prompts ready to copy. A new entry every day.</div>
+      </div>
+      <nav class="sitenav">
+        <a href="index.html">Log</a>
+        <a href="tools.html">All Tools</a>
+        <a href="prompts.html">Best Prompts</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+    <div class="progress-line">
+      <span id="day-label">Day 1 of 15</span>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="log" id="log"></div>
+</main>
+
+<footer class="wrap">
+  <span>&copy; 2026 The Tool Ledger.</span>
+  <span><a href="about.html">About</a> · <a href="privacy.html">Privacy Policy</a> · <a href="disclaimer.html">Disclaimer</a> · <a href="contact.html">Contact</a></span>
+</footer>
+
+<script src="entries.js"></script>
+<script>
+  const TOTAL_DAYS = 15;
+  const log = document.getElementById('log');
+
+  const sorted = [...ENTRIES].sort((a, b) => b.day - a.day);
+
+  document.getElementById('day-label').textContent = `Day ${sorted[0]?.day || 0} of ${TOTAL_DAYS}`;
+  const fillEl = document.getElementById('progress-fill');
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    fillEl.style.width = `${((sorted[0]?.day || 0) / TOTAL_DAYS) * 100}%`;
+  }));
+
+  sorted.forEach(e => {
+    const entry = document.createElement('article');
+    entry.className = 'entry';
+    entry.innerHTML = `
+      <div class="daymark">${String(e.day).padStart(2, '0')}</div>
+      <div class="meta">
+        <span>${e.date}</span>
+        <span class="badge">Day ${e.day}</span>
+      </div>
+      <h2>${e.tool}</h2>
+      <a class="tool-link" href="${e.url}" target="_blank" rel="noopener noreferrer">Visit ${e.tool} &rarr;</a>
+      <p class="desc">${e.description}</p>
+      <div class="prompt-box">
+        <div class="label">Prompts to try with this tool</div>
+        <ul>${e.prompts.map(p => `<li>${p}</li>`).join('')}</ul>
+      </div>
+    `;
+    log.appendChild(entry);
+  });
+
+  // Reveal entries as they scroll into view
+  const observer = new IntersectionObserver((items) => {
+    items.forEach(item => {
+      if (item.isIntersecting) {
+        item.target.classList.add('is-visible');
+        observer.unobserve(item.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.entry').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
