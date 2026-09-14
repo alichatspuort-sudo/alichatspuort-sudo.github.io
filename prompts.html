@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best 100 Prompts — The Tool Ledger</title>
+<meta name="description" content="100 ready-to-use AI prompts, organized by category, for writing, coding, business, and more.">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .tools-toolbar{
+    margin:6px 0 30px 0;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .search-input{
+    width:100%;
+    padding:11px 14px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--paper-light);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:0.95rem;
+    color:var(--ink);
+  }
+  .search-input:focus-visible{outline:2px solid var(--amber); outline-offset:1px;}
+  .cat-filters{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .cat-btn{
+    border:1px solid var(--line);
+    background:var(--paper-light);
+    color:var(--slate);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:0.82rem;
+    padding:6px 13px;
+    border-radius:99px;
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .cat-btn:hover{border-color:var(--amber); color:var(--ink);}
+  .cat-btn.active{
+    background:var(--ink);
+    color:var(--paper-light);
+    border-color:var(--ink);
+  }
+  .count-line{
+    color:var(--slate);
+    font-size:0.85rem;
+    margin-bottom:22px;
+  }
+  .prompt-grid{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    padding-bottom:70px;
+  }
+  .prompt-item{
+    background:var(--paper-light);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:15px 18px;
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
+    opacity:0;
+    transform:translateY(10px);
+    transition:opacity .4s ease, transform .4s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .prompt-item.is-visible{opacity:1; transform:translateY(0);}
+  .prompt-item:hover{
+    box-shadow:0 10px 24px rgba(22,35,47,0.08);
+    border-color:rgba(184,122,30,0.4);
+  }
+  .prompt-item .cat-tag{
+    font-size:0.7rem;
+    color:var(--amber);
+    display:block;
+    margin-bottom:5px;
+  }
+  .prompt-item p{
+    margin:0;
+    font-size:0.94rem;
+    line-height:1.5;
+  }
+  .copy-btn{
+    flex-shrink:0;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:0.78rem;
+    padding:7px 12px;
+    border-radius:var(--radius);
+    cursor:pointer;
+    transition:all .2s ease;
+    white-space:nowrap;
+  }
+  .copy-btn:hover{border-color:var(--amber); color:var(--amber);}
+  .copy-btn.copied{
+    background:var(--amber);
+    color:var(--paper-light);
+    border-color:var(--amber);
+  }
+  .no-results{
+    color:var(--slate);
+    padding:30px 0;
+    display:none;
+  }
+  @media (max-width:560px){
+    .prompt-item{flex-direction:column; align-items:stretch;}
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="row">
+      <div>
+        <div class="brand">The Tool <span>Ledger</span></div>
+        <div class="tagline">100 ready-to-use prompts, organized by category.</div>
+      </div>
+      <nav class="sitenav">
+        <a href="index.html">Log</a>
+        <a href="tools.html">All Tools</a>
+        <a href="prompts.html">Best Prompts</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" style="padding-top:38px;">
+  <div class="tools-toolbar">
+    <input class="search-input" type="text" id="search" placeholder="Search prompts...">
+    <div class="cat-filters" id="cat-filters"></div>
+  </div>
+  <div class="count-line" id="count-line"></div>
+  <div class="prompt-grid" id="grid"></div>
+  <p class="no-results" id="no-results">No prompts match that search.</p>
+</main>
+
+<footer class="wrap">
+  <span>&copy; 2026 The Tool Ledger.</span>
+  <span><a href="about.html">About</a> · <a href="privacy.html">Privacy Policy</a> · <a href="disclaimer.html">Disclaimer</a> · <a href="contact.html">Contact</a></span>
+</footer>
+
+<script src="prompts.js"></script>
+<script>
+  const grid = document.getElementById('grid');
+  const filtersEl = document.getElementById('cat-filters');
+  const countLine = document.getElementById('count-line');
+  const noResults = document.getElementById('no-results');
+  const searchInput = document.getElementById('search');
+
+  const categories = ['All', ...new Set(PROMPTS.map(p => p.category))];
+  let activeCategory = 'All';
+
+  categories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn' + (cat === 'All' ? ' active' : '');
+    btn.textContent = cat;
+    btn.addEventListener('click', () => {
+      activeCategory = cat;
+      [...filtersEl.children].forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      render();
+    });
+    filtersEl.appendChild(btn);
+  });
+
+  const observer = new IntersectionObserver((items) => {
+    items.forEach(item => {
+      if (item.isIntersecting) {
+        item.target.classList.add('is-visible');
+        observer.unobserve(item.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  function copyPrompt(text, btn){
+    navigator.clipboard.writeText(text).then(() => {
+      const original = btn.textContent;
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.classList.remove('copied');
+      }, 1500);
+    });
+  }
+
+  function render(){
+    const q = searchInput.value.trim().toLowerCase();
+    const filtered = PROMPTS.filter(p => {
+      const matchesCat = activeCategory === 'All' || p.category === activeCategory;
+      const matchesQuery = !q || p.text.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
+      return matchesCat && matchesQuery;
+    });
+
+    grid.innerHTML = '';
+    countLine.textContent = `${filtered.length} prompt${filtered.length === 1 ? '' : 's'}${activeCategory !== 'All' ? ' in ' + activeCategory : ''}`;
+    noResults.style.display = filtered.length ? 'none' : 'block';
+
+    filtered.forEach(p => {
+      const item = document.createElement('div');
+      item.className = 'prompt-item';
+      const textDiv = document.createElement('div');
+      textDiv.innerHTML = `<span class="cat-tag">${p.category}</span><p></p>`;
+      textDiv.querySelector('p').textContent = p.text;
+
+      const btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.textContent = 'Copy';
+      btn.addEventListener('click', () => copyPrompt(p.text, btn));
+
+      item.appendChild(textDiv);
+      item.appendChild(btn);
+      grid.appendChild(item);
+      observer.observe(item);
+    });
+  }
+
+  searchInput.addEventListener('input', render);
+  render();
+</script>
+
+</body>
+</html>
