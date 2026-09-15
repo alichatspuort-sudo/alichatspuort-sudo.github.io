@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — The Tool Ledger</title>
+<meta name="description" content="Practical, original articles about using AI tools and prompts well.">
+<meta name="monetag" content="20ee3ff801c68e9d213adf6a5404e744">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .post{
+    padding:50px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .post:last-child{border-bottom:none;}
+  .post-banner{
+    border-radius:4px;
+    overflow:hidden;
+    margin-bottom:26px;
+    opacity:0;
+    transform:translateY(10px);
+    animation:fadeSlideDown .6s ease .1s forwards;
+  }
+  .post-banner svg{display:block; width:100%; height:auto;}
+  .post .meta{font-size:0.82rem; color:var(--slate); margin-bottom:8px;}
+  .post h2{font-size:1.7rem; margin-bottom:14px; max-width:26ch;}
+  .post p{max-width:68ch; margin:0 0 1em 0;}
+  .post ul{max-width:66ch; margin:0 0 1.2em 0; padding-left:20px;}
+  .post li{margin-bottom:8px;}
+  .toc{
+    display:flex; flex-wrap:wrap; gap:10px;
+    margin:24px 0 4px 0;
+  }
+  .toc a{
+    font-size:0.82rem; border:1px solid var(--line); padding:6px 12px;
+    border-radius:99px; color:var(--slate);
+  }
+  .toc a:hover{border-color:var(--amber); color:var(--ink); text-decoration:none;}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="row">
+      <div>
+        <div class="brand">The Tool <span>Ledger</span></div>
+        <div class="tagline">Practical, original articles on using AI tools and prompts well.</div>
+      </div>
+      <nav class="sitenav">
+        <a href="index.html">Log</a>
+        <a href="tools.html">All Tools</a>
+        <a href="prompts.html">Best Prompts</a>
+        <a href="blog.html">Blog</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+    <div class="toc">
+      <a href="#writing-better-prompts">Writing Better Prompts</a>
+      <a href="#image-generators-compared">Image Generators Compared</a>
+      <a href="#chatbots-beyond-chat">Chatbots Beyond Chat</a>
+      <a href="#free-vs-paid">Free vs Paid AI Tools</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap page" style="max-width:920px;">
+
+  <article class="post" id="writing-better-prompts">
+    <div class="post-banner">
+      <svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a glowing spark representing a well-written prompt">
+        <rect x="0" y="0" width="900" height="220" fill="#F6F3EB"/>
+        <circle cx="450" cy="110" r="150" fill="#B87A1E" opacity="0.10"/>
+        <g stroke="#16232F" stroke-opacity="0.25" stroke-width="1">
+          <line x1="150" y1="60" x2="750" y2="60"/>
+          <line x1="150" y1="110" x2="650" y2="110"/>
+          <line x1="150" y1="160" x2="700" y2="160"/>
+        </g>
+        <path d="M450 40 L468 92 L522 110 L468 128 L450 180 L432 128 L378 110 L432 92 Z" fill="#B87A1E"/>
+        <circle cx="450" cy="110" r="6" fill="#16232F"/>
+      </svg>
+    </div>
+    <div class="meta">Prompting Guide · 4 min read</div>
+    <h2>How to Write Prompts That Actually Work</h2>
+    <p>Most people get mediocre results from AI tools for the same reason: the prompt is too vague. "Write me a marketing email" gives the model almost nothing to work with, so it fills in the gaps with generic assumptions. A few small changes to how you phrase a request can make the difference between a throwaway answer and something you can actually use.</p>
+    <p>Here is a simple structure that works across almost every AI chat tool:</p>
+    <ul>
+      <li><strong>Give it a role.</strong> "Act as a senior email copywriter" nudges the model toward a more specific voice than a blank request.</li>
+      <li><strong>State the goal, not just the topic.</strong> "Write an email that gets people to book a free trial" is more useful than "write an email about our product."</li>
+      <li><strong>Add constraints.</strong> Word count, tone, audience, and format (bullet points vs paragraphs) all narrow the output toward what you actually need.</li>
+      <li><strong>Give it an example when you can.</strong> Pasting one sentence in the voice you want is often worth more than three sentences of description.</li>
+      <li><strong>Ask it to critique its own first draft.</strong> Following up with "what's the weakest part of this?" often produces a sharper second version than starting over.</li>
+    </ul>
+    <p>None of this requires special access or a paid tool — it works the same way in ChatGPT, Claude, or Gemini. The <a href="prompts.html">Best Prompts page</a> on this site has 100 ready-made examples built around this same structure, organized by category, if you'd rather start from a template than write one from scratch.</p>
+  </article>
+
+  <article class="post" id="image-generators-compared">
+    <div class="post-banner">
+      <svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a picture frame representing AI image generation">
+        <rect x="0" y="0" width="900" height="220" fill="#F6F3EB"/>
+        <circle cx="450" cy="110" r="150" fill="#5FD9C6" opacity="0.14"/>
+        <rect x="360" y="55" width="180" height="110" rx="6" fill="none" stroke="#16232F" stroke-width="3"/>
+        <circle cx="395" cy="90" r="10" fill="#B87A1E"/>
+        <path d="M375 150 L420 110 L455 140 L490 95 L525 150 Z" fill="#16232F" opacity="0.85"/>
+      </svg>
+    </div>
+    <div class="meta">Comparison · 5 min read</div>
+    <h2>AI Image Generators Compared: Which One Should You Use?</h2>
+    <p>There are dozens of AI image tools now, but most people only need to know three or four of them well. Here's a plain-language breakdown of where each one tends to shine, based on what they're generally used for.</p>
+    <p><strong>Midjourney</strong> is the go-to for stylized, artistic images — concept art, moody portraits, fantasy scenes. It has a distinct aesthetic quality that's hard to replicate elsewhere, though it runs through Discord rather than a standalone website, which trips up some first-time users.</p>
+    <p><strong>DALL·E</strong>, built into ChatGPT, is the easiest entry point if you already use ChatGPT for other tasks — you can describe an image mid-conversation without switching tools, and it's reasonably good at following detailed instructions.</p>
+    <p><strong>Adobe Firefly</strong> is the practical choice for anyone already working in Photoshop, since it's built directly into the app for tasks like extending backgrounds or removing objects, not just generating images from scratch.</p>
+    <p><strong>Ideogram</strong> stands out for one specific thing: it's noticeably better than most competitors at rendering readable text inside an image, which matters for posters, logos, or memes.</p>
+    <p>If you're not sure where to start, DALL·E inside ChatGPT is the lowest-friction option. Once you know what look you're after, Midjourney is usually the upgrade people reach for next. The <a href="tools.html">All Tools directory</a> on this site links directly to all of these, along with several other image tools worth trying.</p>
+  </article>
+
+  <article class="post" id="chatbots-beyond-chat">
+    <div class="post-banner">
+      <svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a chat bubble representing AI assistants">
+        <rect x="0" y="0" width="900" height="220" fill="#F6F3EB"/>
+        <circle cx="450" cy="110" r="150" fill="#B87A1E" opacity="0.10"/>
+        <path d="M370 60 h160 a20 20 0 0 1 20 20 v50 a20 20 0 0 1 -20 20 h-90 l-30 30 v-30 h-40 a20 20 0 0 1 -20 -20 v-50 a20 20 0 0 1 20 -20 z" fill="#16232F"/>
+        <circle cx="415" cy="105" r="7" fill="#F6F3EB"/>
+        <circle cx="450" cy="105" r="7" fill="#F6F3EB"/>
+        <circle cx="485" cy="105" r="7" fill="#B87A1E"/>
+      </svg>
+    </div>
+    <div class="meta">Ideas · 4 min read</div>
+    <h2>5 Ways to Use AI Chatbots Beyond Just Chatting</h2>
+    <p>Most people use ChatGPT, Claude, or Gemini the same way they'd use a search engine — ask a question, get an answer, move on. That's fine, but it undersells what these tools can actually do. A few less obvious uses:</p>
+    <ul>
+      <li><strong>Second opinion on a decision.</strong> Paste in the situation and ask it to argue the other side. It's a fast way to stress-test a plan before you commit to it.</li>
+      <li><strong>Turning messy notes into something usable.</strong> Voice-to-text notes, meeting scribbles, or half-finished bullet points can be turned into a clean summary or action list in seconds.</li>
+      <li><strong>Practicing a hard conversation.</strong> Ask the model to play the other person — a difficult client, a landlord, an interviewer — and rehearse what you'll say.</li>
+      <li><strong>Explaining your own work back to you.</strong> Paste in a document you wrote and ask "what would a confused reader misunderstand here?" It catches gaps you can't see because you already know what you meant.</li>
+      <li><strong>Long-document Q&A.</strong> Instead of reading a 40-page PDF, paste it in and ask targeted questions — most modern chat tools can hold surprisingly long documents in a single conversation.</li>
+    </ul>
+    <p>None of these need a paid plan or special setup — just a different question than the one you'd usually ask.</p>
+  </article>
+
+  <article class="post" id="free-vs-paid">
+    <div class="post-banner">
+      <svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a balance scale representing free versus paid AI tools">
+        <rect x="0" y="0" width="900" height="220" fill="#F6F3EB"/>
+        <circle cx="450" cy="110" r="150" fill="#5FD9C6" opacity="0.14"/>
+        <line x1="450" y1="55" x2="450" y2="165" stroke="#16232F" stroke-width="3"/>
+        <line x1="370" y1="80" x2="530" y2="80" stroke="#16232F" stroke-width="3"/>
+        <line x1="370" y1="80" x2="345" y2="130" stroke="#16232F" stroke-width="2"/>
+        <line x1="370" y1="80" x2="395" y2="130" stroke="#16232F" stroke-width="2"/>
+        <path d="M340 130 a25 18 0 0 0 50 0 Z" fill="#B87A1E"/>
+        <line x1="530" y1="80" x2="505" y2="130" stroke="#16232F" stroke-width="2"/>
+        <line x1="530" y1="80" x2="555" y2="130" stroke="#16232F" stroke-width="2"/>
+        <path d="M500 130 a25 18 0 0 0 50 0 Z" fill="#16232F"/>
+      </svg>
+    </div>
+    <div class="meta">Guide · 4 min read</div>
+    <h2>Free vs Paid AI Tools: When Is It Worth Upgrading?</h2>
+    <p>Nearly every AI tool now has a free tier, and for most casual use, that's genuinely enough. The upgrade is usually worth it once you hit one of these three limits, rather than on a fixed schedule.</p>
+    <p><strong>You keep hitting a usage cap.</strong> If you're regularly told to wait, or bumped to a weaker model after a few messages, the free tier isn't built for your volume of use — that's the clearest signal to upgrade.</p>
+    <p><strong>You need the newest model for accuracy-sensitive work.</strong> Free tiers often default to an older or smaller model. For coding, research, or anything where mistakes are costly, the latest model usually pays for itself quickly.</p>
+    <p><strong>You need a feature that's paywalled outright.</strong> Longer memory, larger file uploads, priority access during peak times, or higher-resolution image generation are commonly locked behind a subscription rather than a usage limit.</p>
+    <p>If none of those apply — you use the tool occasionally, for simple tasks, and never see a wait message — a paid plan probably won't change much for you. It's worth revisiting the decision every few months rather than committing indefinitely either way, since free tiers change often.</p>
+  </article>
+
+</main>
+
+<footer class="wrap">
+  <span>&copy; 2026 The Tool Ledger.</span>
+  <span><a href="about.html">About</a> · <a href="privacy.html">Privacy Policy</a> · <a href="disclaimer.html">Disclaimer</a> · <a href="contact.html">Contact</a></span>
+</footer>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
+}
+</script>
+<script src="chat-widget.js"></script>
+</body>
+</html>
