@@ -14,7 +14,7 @@
   style.textContent = `
     #tl-chat-btn{
       position:fixed; bottom:22px; right:22px; z-index:9999;
-      background:var(--ink); color:var(--paper-light);
+      background:var(--ink, #151a24); color:var(--paper-light, #0f141c);
       border:none; border-radius:99px; padding:13px 20px;
       font-family:'IBM Plex Sans', sans-serif; font-size:0.88rem; font-weight:500;
       cursor:pointer; box-shadow:0 8px 20px rgba(22,35,47,0.25);
@@ -22,39 +22,39 @@
       transition:transform .2s ease, box-shadow .2s ease;
     }
     #tl-chat-btn:hover{ transform:translateY(-2px); box-shadow:0 12px 26px rgba(22,35,47,0.3); }
-    #tl-chat-btn .dot{ width:7px; height:7px; border-radius:50%; background:var(--amber); }
+    #tl-chat-btn .dot{ width:7px; height:7px; border-radius:50%; background:var(--amber, #4f46e5); }
     #tl-chat-panel{
       position:fixed; bottom:88px; right:22px; z-index:9999;
       width:340px; max-width:calc(100vw - 44px); height:440px; max-height:calc(100vh - 140px);
-      background:var(--paper-light); border:1px solid var(--line); border-radius:8px;
+      background:var(--paper-light, #0f141c); border:1px solid var(--line, rgba(255,255,255,0.12)); border-radius:8px;
       box-shadow:0 20px 50px rgba(22,35,47,0.25);
       display:none; flex-direction:column; overflow:hidden;
       opacity:0; transform:translateY(14px); transition:opacity .25s ease, transform .25s ease;
     }
     #tl-chat-panel.open{ display:flex; opacity:1; transform:translateY(0); }
     #tl-chat-header{
-      background:var(--ink); color:var(--paper-light);
+      background:var(--ink, #151a24); color:var(--paper-light, #0f141c);
       padding:14px 16px; font-family:'Fraunces', serif; font-size:1rem; font-weight:600;
       display:flex; align-items:center; justify-content:space-between;
     }
     #tl-chat-header span.sub{ display:block; font-family:'IBM Plex Sans',sans-serif; font-weight:400; font-size:0.72rem; color:#B9C2CA; margin-top:2px; }
-    #tl-chat-close{ background:none; border:none; color:var(--paper-light); font-size:1.1rem; cursor:pointer; line-height:1; }
+    #tl-chat-close{ background:none; border:none; color:var(--paper-light, #0f141c); font-size:1.1rem; cursor:pointer; line-height:1; }
     #tl-chat-messages{
       flex:1; overflow-y:auto; padding:14px 16px; display:flex; flex-direction:column; gap:10px;
     }
     .tl-msg{ font-size:0.87rem; line-height:1.45; padding:9px 12px; border-radius:8px; max-width:85%; }
-    .tl-msg.bot{ background:var(--paper); border:1px solid var(--line); align-self:flex-start; }
-    .tl-msg.user{ background:var(--ink); color:var(--paper-light); align-self:flex-end; }
-    .tl-msg.typing{ color:var(--slate); font-style:italic; }
-    #tl-chat-form{ display:flex; gap:8px; padding:12px; border-top:1px solid var(--line); }
+    .tl-msg.bot{ background:var(--paper, #0a0e15); border:1px solid var(--line, rgba(255,255,255,0.12)); align-self:flex-start; }
+    .tl-msg.user{ background:var(--ink, #151a24); color:var(--paper-light, #0f141c); align-self:flex-end; }
+    .tl-msg.typing{ color:var(--slate, #9ca3af); font-style:italic; }
+    #tl-chat-form{ display:flex; gap:8px; padding:12px; border-top:1px solid var(--line, rgba(255,255,255,0.12)); }
     #tl-chat-input{
-      flex:1; border:1px solid var(--line); border-radius:6px; padding:9px 11px;
-      font-family:'IBM Plex Sans', sans-serif; font-size:0.85rem; background:var(--paper);
-      color:var(--ink);
+      flex:1; border:1px solid var(--line, rgba(255,255,255,0.12)); border-radius:6px; padding:9px 11px;
+      font-family:'IBM Plex Sans', sans-serif; font-size:0.85rem; background:var(--paper, #0a0e15);
+      color:var(--ink, #151a24);
     }
-    #tl-chat-input:focus-visible{ outline:2px solid var(--amber); }
+    #tl-chat-input:focus-visible{ outline:2px solid var(--amber, #4f46e5); }
     #tl-chat-send{
-      background:var(--amber); color:var(--paper-light); border:none; border-radius:6px;
+      background:var(--amber, #4f46e5); color:var(--paper-light, #0f141c); border:none; border-radius:6px;
       padding:0 14px; font-size:0.85rem; cursor:pointer;
     }
     #tl-chat-send:disabled{ opacity:0.5; cursor:default; }
