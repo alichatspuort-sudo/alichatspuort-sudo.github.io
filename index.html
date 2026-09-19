@@ -1,217 +1,964 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark scroll-smooth">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Tool Ledger — A daily record of AI tools and prompts</title>
-<meta name="description" content="One AI tool explained, and the exact prompts to use with it — a new entry added every day.">
-<meta name="monetag" content="20ee3ff801c68e9d213adf6a5404e744">
-<link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Tool Ledger | Curated AI Discovery & Ledger</title>
+    <meta name="monetag" content="20ee3ff801c68e9d213adf6a5404e744">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f3ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            cyan: '#06b6d4',
+                            emerald: '#10b981',
+                            violet: '#8b5cf6',
+                        },
+                        dark: {
+                            900: '#07090e',
+                            800: '#0f141c',
+                            700: '#18202d',
+                            600: '#232e40',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 3s ease-in-out infinite alternate',
+                        'shimmer': 'shimmer 2.5s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        glow: {
+                            '0%': { opacity: '0.4', filter: 'drop-shadow(0 0 15px rgba(99, 102, 241, 0.4))' },
+                            '100%': { opacity: '0.8', filter: 'drop-shadow(0 0 30px rgba(6, 182, 212, 0.7))' }
+                        },
+                        shimmer: {
+                            '100%': { transform: 'translateX(100%)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #07090e;
+            color: #f3f4f6;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Custom Glassmorphism Styling */
+        .glass-card {
+            background: rgba(15, 20, 28, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card-hover {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card-hover:hover {
+            transform: translateY(-4px);
+            background: rgba(24, 32, 45, 0.75);
+            border-color: rgba(99, 102, 241, 0.35);
+            box-shadow: 0 20px 40px -15px rgba(7, 9, 14, 0.9), 0 0 20px 0 rgba(99, 102, 241, 0.15);
+        }
+
+        .glass-nav {
+            background: rgba(7, 9, 14, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Gradient Glow Background Mesh */
+        .bg-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.18;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #07090e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #18202d;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4f46e5;
+        }
+
+        /* Shimmer Effect for cards */
+        .shimmer-container {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-container::after {
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            transform: translateX(-100%);
+            background-image: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0,
+                rgba(255, 255, 255, 0.03) 20%,
+                rgba(255, 255, 255, 0.08) 60%,
+                rgba(255, 255, 255, 0)
+            );
+            animation: shimmer 4s infinite;
+            content: '';
+            pointer-events: none;
+        }
+    </style>
 </head>
-<body>
+<body class="selection:bg-brand-500 selection:text-white">
 
-<header class="masthead">
-  <div class="wrap">
-    <div class="row">
-      <div>
-        <div class="brand">The Tool <span>Ledger</span></div>
-        <div class="tagline">One AI tool, explained in plain language, with prompts ready to copy. A new entry every day.</div>
-      </div>
-      <nav class="sitenav">
-        <a href="index.html">Log</a>
-        <a href="tools.html">All Tools</a>
-        <a href="prompts.html">Best Prompts</a>
-        <a href="blog.html">Blog</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-      </nav>
+    <!-- Ambient Gradient Mesh Background -->
+    <div class="bg-mesh">
+        <div class="glow-orb w-[600px] h-[600px] bg-brand-500 top-[-100px] left-[-100px] animate-pulse-slow"></div>
+        <div class="glow-orb w-[500px] h-[500px] bg-brand-cyan bottom-[-50px] right-[-50px] animate-pulse-slow" style="animation-delay: 2s;"></div>
+        <div class="glow-orb w-[400px] h-[400px] bg-brand-violet top-[40%] left-[30%] animate-pulse-slow" style="animation-delay: 1s;"></div>
     </div>
-    <div class="progress-line">
-      <span id="day-label">Day 1 of 15</span>
-      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+
+    <nav class="fixed top-5 left-0 right-0 z-50 px-4 sm:px-8 max-w-7xl mx-auto">
+        <div class="glass-nav rounded-2xl px-5 py-3.5 flex items-center justify-between shadow-2xl transition-all duration-300">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center space-x-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-brand-cyan to-brand-emerald p-[1px] flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300">
+                    <div class="w-full h-full bg-dark-900 rounded-[11px] flex items-center justify-center">
+                        <i class="fa-solid fa-layer-group text-brand-cyan text-lg group-hover:rotate-12 transition-transform duration-300"></i>
+                    </div>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-extrabold text-lg tracking-tight text-white flex items-center gap-1.5">
+                        THE TOOL <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan to-brand-500">LEDGER</span>
+                    </span>
+                    <span class="text-[10px] text-gray-400 font-mono tracking-wider -mt-1 uppercase">AI Discovery Platform</span>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <div class="hidden md:flex items-center space-x-1 lg:space-x-2 text-sm font-medium">
+                <a href="#discovery" class="px-4 py-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all">Explore Ledger</a>
+                <a href="#tracker" class="px-4 py-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-brand-emerald animate-ping"></span> 15-Day Tracker
+                </a>
+                <a href="#prompts" class="px-4 py-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all">Prompts Vault</a>
+                <a href="#insights" class="px-4 py-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all">Insights</a>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleSubmitModal()" class="hidden sm:flex items-center gap-2 text-xs font-semibold px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white shadow-lg shadow-brand-600/25 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                    <i class="fa-solid fa-plus text-xs"></i>
+                    <span>Submit Tool</span>
+                </button>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-gray-400 hover:text-white p-2">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass-nav mt-2 rounded-2xl p-4 flex flex-col space-y-2 text-sm border border-white/10 shadow-2xl">
+            <a href="#discovery" class="px-4 py-2.5 rounded-xl text-gray-300 hover:bg-white/5">Explore Ledger</a>
+            <a href="#tracker" class="px-4 py-2.5 rounded-xl text-gray-300 hover:bg-white/5">15-Day Tracker</a>
+            <a href="#prompts" class="px-4 py-2.5 rounded-xl text-gray-300 hover:bg-white/5">Prompts Vault</a>
+            <a href="#insights" class="px-4 py-2.5 rounded-xl text-gray-300 hover:bg-white/5">Insights</a>
+            <button onclick="toggleSubmitModal()" class="w-full text-center py-2.5 rounded-xl bg-brand-600 text-white font-semibold text-xs mt-2">
+                Submit Tool
+            </button>
+        </div>
+    </nav>
+
+    <header class="pt-36 pb-20 px-4 sm:px-8 max-w-7xl mx-auto text-center relative">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-cyan text-xs font-semibold mb-8 animate-float">
+            <i class="fa-solid fa-sparkles"></i>
+            <span>Curated Ledger Updated Daily with Premier AI Solutions</span>
+        </div>
+
+        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-[1.15] mb-6">
+            Master the Frontier of <br class="hidden sm:inline">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan via-brand-500 to-brand-violet">Artificial Intelligence</span>
+        </h1>
+
+        <p class="text-gray-400 text-base sm:text-xl max-w-2xl mx-auto font-normal leading-relaxed mb-10">
+            A real-time ledger of high-impact AI tools, production-ready prompts, and curated workflows tailored for developers, creators, and executives.
+        </p>
+
+        <!-- Search Bar -->
+        <div class="max-w-2xl mx-auto relative mb-12">
+            <div class="glass-card rounded-2xl p-2 flex items-center border border-white/10 shadow-2xl focus-within:border-brand-500/50 transition-all">
+                <i class="fa-solid fa-magnifying-glass text-gray-400 ml-4 mr-3 text-lg"></i>
+                <input id="search-input" type="text" placeholder="Search 250+ AI tools by name, tag, or use case..." 
+                       class="w-full bg-transparent text-white placeholder-gray-500 text-sm sm:text-base focus:outline-none pr-4">
+                <kbd class="hidden sm:inline-block px-2.5 py-1 bg-dark-800 border border-gray-700 rounded-lg text-xs font-mono text-gray-400">Ctrl + K</kbd>
+            </div>
+        </div>
+
+        <!-- Live Platform Metrics -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            <div class="glass-card rounded-2xl p-4 border border-white/5 text-center">
+                <div class="text-2xl sm:text-3xl font-extrabold text-white font-mono" id="stat-tools">101</div>
+                <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider font-semibold">Indexed Tools</div>
+            </div>
+            <div class="glass-card rounded-2xl p-4 border border-white/5 text-center">
+                <div class="text-2xl sm:text-3xl font-extrabold text-brand-cyan font-mono">100</div>
+                <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider font-semibold">Ready Prompts</div>
+            </div>
+            <div class="glass-card rounded-2xl p-4 border border-white/5 text-center">
+                <div class="text-2xl sm:text-3xl font-extrabold text-brand-emerald font-mono">Daily</div>
+                <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider font-semibold">New Entries</div>
+            </div>
+            <div class="glass-card rounded-2xl p-4 border border-white/5 text-center">
+                <div class="text-2xl sm:text-3xl font-extrabold text-brand-violet font-mono">Free</div>
+                <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider font-semibold">No Signup Needed</div>
+            </div>
+        </div>
+    </header>
+
+    <section id="tracker" class="py-16 px-4 sm:px-8 max-w-7xl mx-auto">
+        <div class="glass-card rounded-3xl p-6 sm:p-10 border border-white/10 shadow-2xl relative overflow-hidden shimmer-container">
+            <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-8 gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-emerald/10 border border-brand-emerald/20 text-brand-emerald text-xs font-semibold mb-2">
+                        <i class="fa-solid fa-book-open"></i> How the Ledger Works
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white">One Tool, Explained &mdash; Every Day</h2>
+                    <p class="text-gray-400 text-sm mt-1">No fluff, no affiliate spin. Just what a tool does, and prompts ready to copy.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-dark-900/60 rounded-2xl p-5 border border-white/5">
+                    <i class="fa-solid fa-layer-group text-brand-cyan text-xl mb-2"></i>
+                    <div class="text-sm font-bold text-white">101 Tools Indexed</div>
+                    <div class="text-xs text-gray-400 mt-1">Across 13 categories</div>
+                </div>
+                <div class="bg-dark-900/60 rounded-2xl p-5 border border-white/5">
+                    <i class="fa-solid fa-terminal text-brand-emerald text-xl mb-2"></i>
+                    <div class="text-sm font-bold text-white">100 Ready Prompts</div>
+                    <div class="text-xs text-gray-400 mt-1">Copy, paste, and go</div>
+                </div>
+                <div class="bg-dark-900/60 rounded-2xl p-5 border border-white/5">
+                    <i class="fa-solid fa-lock-open text-brand-violet text-xl mb-2"></i>
+                    <div class="text-sm font-bold text-white">No Signup</div>
+                    <div class="text-xs text-gray-400 mt-1">Everything is free to browse</div>
+                </div>
+                <div class="bg-dark-900/60 rounded-2xl p-5 border border-white/5">
+                    <i class="fa-solid fa-comment-dots text-brand-500 text-xl mb-2"></i>
+                    <div class="text-sm font-bold text-white">Ask the AI</div>
+                    <div class="text-xs text-gray-400 mt-1">Built-in assistant helps you pick</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="discovery" class="py-16 px-4 sm:px-8 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+            <div>
+                <h2 class="text-3xl font-extrabold text-white">AI Tool Directory</h2>
+                <p class="text-gray-400 text-sm mt-1">101 tools, organized by category &mdash; explanations, not just links.</p>
+            </div>
+
+            <!-- Category Pills (populated by JS from real data) -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" id="category-filters">
+            </div>
+        </div>
+
+        <!-- AI Tools Dynamic Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="tools-grid">
+            <!-- Dynamically populated via JS -->
+        </div>
+    </section>
+
+    <section id="prompts" class="py-16 px-4 sm:px-8 max-w-7xl mx-auto">
+        <div class="glass-card rounded-3xl p-8 sm:p-12 border border-white/10 shadow-2xl">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
+                <div>
+                    <span class="text-xs font-mono font-bold text-brand-cyan uppercase tracking-wider">100 Prompts</span>
+                    <h2 class="text-3xl font-extrabold text-white mt-1">Best Prompts</h2>
+                    <p class="text-gray-400 text-sm">Ready-made prompts, organized by category. Works in ChatGPT, Claude, Gemini &amp; more.</p>
+                </div>
+                <div class="glass-card rounded-xl px-3 py-2 flex items-center border border-white/10 w-full md:w-72">
+                    <i class="fa-solid fa-magnifying-glass text-gray-500 mr-2.5 text-sm"></i>
+                    <input id="prompts-search-input" type="text" placeholder="Search prompts..."
+                           class="w-full bg-transparent text-white placeholder-gray-500 text-sm focus:outline-none">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="prompts-grid">
+                <!-- Dynamically populated via JS -->
+            </div>
+        </div>
+    </section>
+
+    <section id="insights" class="py-16 px-4 sm:px-8 max-w-7xl mx-auto">
+        <div class="mb-10">
+            <h2 class="text-3xl font-extrabold text-white">From the Blog</h2>
+            <p class="text-gray-400 text-sm mt-1">Practical, original articles on using AI tools and prompts well.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <article class="glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between border border-white/5 group">
+                <div>
+                    <div class="flex items-center justify-between text-xs text-gray-400 mb-4 font-mono">
+                        <span>PROMPTING GUIDE</span>
+                        <span>4 MIN READ</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white group-hover:text-brand-cyan transition-colors mb-3">
+                        How to Write Prompts That Actually Work
+                    </h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                        A simple structure that turns vague requests into results you can actually use.
+                    </p>
+                </div>
+                <div class="flex items-center justify-end pt-4 border-t border-white/5">
+                    <a href="blog.html#writing-better-prompts" class="text-xs font-bold text-brand-500 hover:text-brand-cyan flex items-center gap-1.5">
+                        Read Post <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
+            </article>
+
+            <article class="glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between border border-white/5 group">
+                <div>
+                    <div class="flex items-center justify-between text-xs text-gray-400 mb-4 font-mono">
+                        <span>COMPARISON</span>
+                        <span>5 MIN READ</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white group-hover:text-brand-cyan transition-colors mb-3">
+                        AI Image Generators Compared
+                    </h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                        Midjourney, DALL&middot;E, Firefly, and Ideogram &mdash; where each one actually shines.
+                    </p>
+                </div>
+                <div class="flex items-center justify-end pt-4 border-t border-white/5">
+                    <a href="blog.html#image-generators-compared" class="text-xs font-bold text-brand-500 hover:text-brand-cyan flex items-center gap-1.5">
+                        Read Post <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
+            </article>
+
+            <article class="glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between border border-white/5 group">
+                <div>
+                    <div class="flex items-center justify-between text-xs text-gray-400 mb-4 font-mono">
+                        <span>IDEAS</span>
+                        <span>4 MIN READ</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white group-hover:text-brand-cyan transition-colors mb-3">
+                        5 Ways to Use Chatbots Beyond Chat
+                    </h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                        Rehearsing hard conversations, stress-testing decisions, and more.
+                    </p>
+                </div>
+                <div class="flex items-center justify-end pt-4 border-t border-white/5">
+                    <a href="blog.html#chatbots-beyond-chat" class="text-xs font-bold text-brand-500 hover:text-brand-cyan flex items-center gap-1.5">
+                        Read Post <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
+            </article>
+        </div>
+        <div class="text-center mt-8">
+            <a href="blog.html" class="text-sm font-bold text-brand-cyan hover:text-white">Read all posts &rarr;</a>
+        </div>
+    </section>
+
+    <footer class="mt-20 border-t border-white/10 bg-dark-900/80 backdrop-blur-md py-12 px-4 sm:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-600 to-brand-cyan p-[1px] flex items-center justify-center">
+                    <div class="w-full h-full bg-dark-900 rounded-[7px] flex items-center justify-center">
+                        <i class="fa-solid fa-layer-group text-brand-cyan text-xs"></i>
+                    </div>
+                </div>
+                <span class="font-bold text-sm tracking-tight text-white">THE TOOL LEDGER</span>
+            </div>
+
+            <p class="text-xs text-gray-500 text-center">
+                &copy; 2026 The Tool Ledger. Curated for the modern AI ecosystem.
+            </p>
+
+            <div class="flex items-center gap-4 text-xs text-gray-400">
+                <a href="about.html" class="hover:text-brand-cyan transition-colors">About</a>
+                <a href="privacy.html" class="hover:text-brand-cyan transition-colors">Privacy</a>
+                <a href="disclaimer.html" class="hover:text-brand-cyan transition-colors">Disclaimer</a>
+                <a href="contact.html" class="hover:text-brand-cyan transition-colors">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="submit-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div class="glass-card rounded-3xl p-6 sm:p-8 max-w-lg w-full border border-white/10 shadow-2xl relative animate-float" style="animation-duration: 0s;">
+            <button onclick="toggleSubmitModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <h3 class="text-2xl font-bold text-white mb-2">Submit an AI Tool</h3>
+            <p class="text-gray-400 text-sm mb-6">Have an AI product or workflow that belongs in the Ledger? Let us know.</p>
+
+            <form id="submit-tool-form" onsubmit="handleToolSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">TOOL NAME</label>
+                    <input id="submit-name" type="text" required placeholder="e.g. Cursor Editor" class="w-full bg-dark-900/90 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">WEBSITE URL</label>
+                    <input id="submit-url" type="url" required placeholder="https://..." class="w-full bg-dark-900/90 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">CATEGORY</label>
+                    <select id="submit-category" class="w-full bg-dark-900/90 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500"></select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">SHORT DESCRIPTION</label>
+                    <textarea id="submit-desc" rows="3" required placeholder="Describe key capabilities..." class="w-full bg-dark-900/90 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500"></textarea>
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm transition-all shadow-lg shadow-brand-600/30">
+                    Send via Email
+                </button>
+                <p class="text-[11px] text-gray-500 text-center">Opens your email app with the details filled in &mdash; we read every submission.</p>
+            </form>
+        </div>
     </div>
-  </div>
-</header>
 
-<main class="wrap">
-  <div class="hero-visual hero-visual-dark">
-    <svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Glowing futuristic AI circuit illustration">
-      <defs>
-        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#0C1620"/>
-          <stop offset="100%" stop-color="#16232F"/>
-        </linearGradient>
-        <radialGradient id="coreGlow" cx="50%" cy="50%" r="55%">
-          <stop offset="0%" stop-color="#E3A548" stop-opacity="0.55"/>
-          <stop offset="100%" stop-color="#E3A548" stop-opacity="0"/>
-        </radialGradient>
-        <radialGradient id="tealGlow" cx="50%" cy="50%" r="60%">
-          <stop offset="0%" stop-color="#5FD9C6" stop-opacity="0.30"/>
-          <stop offset="100%" stop-color="#5FD9C6" stop-opacity="0"/>
-        </radialGradient>
-        <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
-          <feGaussianBlur stdDeviation="4.5" result="blur"/>
-          <feMerge>
-            <feMergeNode in="blur"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
-      </defs>
-
-      <rect x="0" y="0" width="900" height="220" fill="url(#bgGrad)"/>
-      <circle cx="450" cy="110" r="170" fill="url(#coreGlow)"/>
-      <circle cx="200" cy="60" r="120" fill="url(#tealGlow)"/>
-      <circle cx="700" cy="160" r="120" fill="url(#tealGlow)"/>
-
-      <!-- circuit traces -->
-      <g stroke="#5FD9C6" stroke-opacity="0.45" stroke-width="1.3" fill="none">
-        <path d="M100 110 H210 V60 H320"/>
-        <path d="M100 160 H180 V190 H300"/>
-        <path d="M320 60 V150 H450"/>
-        <path d="M300 190 H420 V150"/>
-        <path d="M580 60 H480 V150"/>
-        <path d="M800 110 H690 V70 H560"/>
-        <path d="M800 165 H720 V190 H500"/>
-        <path d="M450 150 V80"/>
-      </g>
-
-      <!-- glowing trace nodes -->
-      <g fill="#5FD9C6" filter="url(#softGlow)">
-        <circle cx="100" cy="110" r="3.5"><animate attributeName="opacity" values="0.35;1;0.35" dur="2.6s" begin="0s" repeatCount="indefinite"/></circle>
-        <circle cx="100" cy="160" r="3.5"><animate attributeName="opacity" values="0.35;1;0.35" dur="2.6s" begin="0.4s" repeatCount="indefinite"/></circle>
-        <circle cx="320" cy="60" r="3.5"><animate attributeName="opacity" values="0.35;1;0.35" dur="2.6s" begin="0.8s" repeatCount="indefinite"/></circle>
-        <circle cx="300" cy="190" r="3.5"><animate attributeName="opacity" values="0.35;1;0.35" dur="2.6s" begin="1.1s" repeatCount="indefinite"/></circle>
-        <circle cx="800" cy="110" r="3.5"><animate attributeName="opacity" values="0.35;1;0.35" dur="2.6s" begin="0.6s" repeatCount="indefinite"/></circle>
-        <circle cx="800" cy="165" r="3.5"><animate attributeName="opacity" values="0.35;1;0.35" dur="2.6s" begin="1.4s" repeatCount="indefinite"/></circle>
-        <circle cx="580" cy="60" r="3.5"><animate attributeName="opacity" values="0.35;1;0.35" dur="2.6s" begin="0.2s" repeatCount="indefinite"/></circle>
-        <circle cx="500" cy="190" r="3.5"><animate attributeName="opacity" values="0.35;1;0.35" dur="2.6s" begin="1.7s" repeatCount="indefinite"/></circle>
-      </g>
-
-      <!-- central AI chip -->
-      <g filter="url(#softGlow)">
-        <polygon points="450,55 500,80 500,140 450,165 400,140 400,80" fill="#0E1822" stroke="#E3A548" stroke-width="2"/>
-        <polygon points="450,75 480,90 480,130 450,145 420,130 420,90" fill="none" stroke="#E3A548" stroke-opacity="0.55" stroke-width="1"/>
-        <circle cx="450" cy="110" r="10" fill="#E3A548">
-          <animate attributeName="r" values="8;12;8" dur="2.2s" repeatCount="indefinite"/>
-        </circle>
-      </g>
-
-      <!-- slow rotating ring for a 'processing' feel -->
-      <g filter="url(#softGlow)" opacity="0.7">
-        <circle cx="450" cy="110" r="46" fill="none" stroke="#E3A548" stroke-width="1.2" stroke-dasharray="6 10">
-          <animateTransform attributeName="transform" type="rotate" from="0 450 110" to="360 450 110" dur="14s" repeatCount="indefinite"/>
-        </circle>
-      </g>
-    </svg>
-  </div>
-  <div class="log" id="log"></div>
-
-  <section class="blog-preview">
-    <h2>From the Blog</h2>
-    <div class="blog-cards">
-      <a class="blog-card" href="blog.html#writing-better-prompts">
-        <svg viewBox="0 0 300 140" xmlns="http://www.w3.org/2000/svg">
-          <rect width="300" height="140" fill="#F6F3EB"/>
-          <circle cx="150" cy="70" r="90" fill="#B87A1E" opacity="0.10"/>
-          <path d="M150 25 L162 58 L196 70 L162 82 L150 115 L138 82 L104 70 L138 58 Z" fill="#B87A1E"/>
-        </svg>
-        <div class="blog-card-body">
-          <span class="blog-tag">Prompting Guide</span>
-          <h3>How to Write Prompts That Actually Work</h3>
-          <p>A simple structure that turns vague requests into results you can actually use.</p>
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="glass-card border border-brand-500/50 rounded-xl px-4 py-3 shadow-2xl flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-brand-500/20 text-brand-cyan flex items-center justify-center">
+                <i class="fa-solid fa-check text-sm"></i>
+            </div>
+            <div>
+                <div class="text-sm font-bold text-white" id="toast-title">Copied!</div>
+                <div class="text-xs text-gray-400" id="toast-message">Prompt copied to clipboard.</div>
+            </div>
         </div>
-      </a>
-      <a class="blog-card" href="blog.html#image-generators-compared">
-        <svg viewBox="0 0 300 140" xmlns="http://www.w3.org/2000/svg">
-          <rect width="300" height="140" fill="#F6F3EB"/>
-          <circle cx="150" cy="70" r="90" fill="#5FD9C6" opacity="0.16"/>
-          <rect x="105" y="35" width="90" height="60" rx="4" fill="none" stroke="#16232F" stroke-width="2.5"/>
-          <circle cx="122" cy="55" r="6" fill="#B87A1E"/>
-          <path d="M113 85 L136 62 L155 79 L175 52 L197 85 Z" fill="#16232F" opacity="0.85"/>
-        </svg>
-        <div class="blog-card-body">
-          <span class="blog-tag">Comparison</span>
-          <h3>AI Image Generators Compared</h3>
-          <p>Midjourney, DALL·E, Firefly, and Ideogram &mdash; where each one actually shines.</p>
-        </div>
-      </a>
-      <a class="blog-card" href="blog.html#chatbots-beyond-chat">
-        <svg viewBox="0 0 300 140" xmlns="http://www.w3.org/2000/svg">
-          <rect width="300" height="140" fill="#F6F3EB"/>
-          <circle cx="150" cy="70" r="90" fill="#B87A1E" opacity="0.10"/>
-          <path d="M110 40 h80 a12 12 0 0 1 12 12 v30 a12 12 0 0 1 -12 12 h-50 l-18 18 v-18 h-12 a12 12 0 0 1 -12 -12 v-30 a12 12 0 0 1 12 -12 z" fill="#16232F"/>
-        </svg>
-        <div class="blog-card-body">
-          <span class="blog-tag">Ideas</span>
-          <h3>5 Ways to Use Chatbots Beyond Chat</h3>
-          <p>Rehearsing hard conversations, stress-testing decisions, and more.</p>
-        </div>
-      </a>
     </div>
-    <a class="tool-link" href="blog.html" style="margin-top:6px; display:inline-block;">Read all posts &rarr;</a>
-  </section>
-</main>
 
-<footer class="wrap">
-  <span>&copy; 2026 The Tool Ledger.</span>
-  <span><a href="about.html">About</a> · <a href="privacy.html">Privacy Policy</a> · <a href="disclaimer.html">Disclaimer</a> · <a href="contact.html">Contact</a></span>
-</footer>
+    <script>
+        // AI Tools Dataset (real data, synced from tools.js)
+        const toolsData = [
+                    { id: 1, name: "ChatGPT", category: "chatbots-and-assistants", categoryLabel: "Chatbots & Assistants", description: "General-purpose AI assistant for writing, coding help, and everyday questions.", icon: "fa-comments", url: "https://chatgpt.com" },
+                    { id: 2, name: "Claude", category: "chatbots-and-assistants", categoryLabel: "Chatbots & Assistants", description: "AI assistant known for handling long documents and careful reasoning.", icon: "fa-comments", url: "https://claude.ai" },
+                    { id: 3, name: "Gemini", category: "chatbots-and-assistants", categoryLabel: "Chatbots & Assistants", description: "Google's assistant, built into Search, Docs, and Gmail.", icon: "fa-comments", url: "https://gemini.google.com" },
+                    { id: 4, name: "Perplexity", category: "chatbots-and-assistants", categoryLabel: "Chatbots & Assistants", description: "AI answer engine that shows cited sources for every response.", icon: "fa-comments", url: "https://www.perplexity.ai" },
+                    { id: 5, name: "Microsoft Copilot", category: "chatbots-and-assistants", categoryLabel: "Chatbots & Assistants", description: "Assistant built into Windows, Edge, and Office apps.", icon: "fa-comments", url: "https://copilot.microsoft.com" },
+                    { id: 6, name: "Poe", category: "chatbots-and-assistants", categoryLabel: "Chatbots & Assistants", description: "One app for chatting with many different AI models side by side.", icon: "fa-comments", url: "https://poe.com" },
+                    { id: 7, name: "Character.AI", category: "chatbots-and-assistants", categoryLabel: "Chatbots & Assistants", description: "Lets you create and chat with custom AI personas and characters.", icon: "fa-comments", url: "https://character.ai" },
+                    { id: 8, name: "You.com", category: "chatbots-and-assistants", categoryLabel: "Chatbots & Assistants", description: "Search engine with a built-in AI chat and app builder.", icon: "fa-comments", url: "https://you.com" },
+                    { id: 9, name: "Pi", category: "chatbots-and-assistants", categoryLabel: "Chatbots & Assistants", description: "Personal AI from Inflection, built for supportive everyday conversation.", icon: "fa-comments", url: "https://pi.ai" },
+                    { id: 10, name: "Meta AI", category: "chatbots-and-assistants", categoryLabel: "Chatbots & Assistants", description: "Meta's assistant built into Facebook, Instagram, and WhatsApp.", icon: "fa-comments", url: "https://www.meta.ai" },
+                    { id: 11, name: "Jasper", category: "writing-and-content", categoryLabel: "Writing & Content", description: "AI copywriting tool built for marketing teams and brand voice.", icon: "fa-pen-nib", url: "https://www.jasper.ai" },
+                    { id: 12, name: "Copy.ai", category: "writing-and-content", categoryLabel: "Writing & Content", description: "Generates marketing copy, emails, and social captions quickly.", icon: "fa-pen-nib", url: "https://www.copy.ai" },
+                    { id: 13, name: "Grammarly", category: "writing-and-content", categoryLabel: "Writing & Content", description: "Checks grammar, tone, and clarity as you write anywhere online.", icon: "fa-pen-nib", url: "https://www.grammarly.com" },
+                    { id: 14, name: "QuillBot", category: "writing-and-content", categoryLabel: "Writing & Content", description: "Paraphrasing and summarizing tool popular with writers and students.", icon: "fa-pen-nib", url: "https://quillbot.com" },
+                    { id: 15, name: "Sudowrite", category: "writing-and-content", categoryLabel: "Writing & Content", description: "AI writing partner built specifically for fiction authors.", icon: "fa-pen-nib", url: "https://www.sudowrite.com" },
+                    { id: 16, name: "Writesonic", category: "writing-and-content", categoryLabel: "Writing & Content", description: "AI content generator for blog posts, ads, and landing pages.", icon: "fa-pen-nib", url: "https://writesonic.com" },
+                    { id: 17, name: "Notion AI", category: "writing-and-content", categoryLabel: "Writing & Content", description: "Writing and summarizing assistant built directly into Notion docs.", icon: "fa-pen-nib", url: "https://www.notion.so" },
+                    { id: 18, name: "Hemingway Editor", category: "writing-and-content", categoryLabel: "Writing & Content", description: "Highlights overly complex sentences to make your writing simpler.", icon: "fa-pen-nib", url: "https://hemingwayapp.com" },
+                    { id: 19, name: "Rytr", category: "writing-and-content", categoryLabel: "Writing & Content", description: "Budget-friendly AI writer for short-form marketing content.", icon: "fa-pen-nib", url: "https://rytr.me" },
+                    { id: 20, name: "Wordtune", category: "writing-and-content", categoryLabel: "Writing & Content", description: "Rewrites sentences instantly to match a tone you choose.", icon: "fa-pen-nib", url: "https://www.wordtune.com" },
+                    { id: 21, name: "Midjourney", category: "image-generation", categoryLabel: "Image Generation", description: "Produces highly stylized, artistic AI images from text prompts.", icon: "fa-image", url: "https://www.midjourney.com" },
+                    { id: 22, name: "DALL·E", category: "image-generation", categoryLabel: "Image Generation", description: "OpenAI's image generator, available directly inside ChatGPT.", icon: "fa-image", url: "https://openai.com/dall-e-3" },
+                    { id: 23, name: "Stability AI", category: "image-generation", categoryLabel: "Image Generation", description: "Makers of Stable Diffusion, an open image-generation model.", icon: "fa-image", url: "https://stability.ai" },
+                    { id: 24, name: "Adobe Firefly", category: "image-generation", categoryLabel: "Image Generation", description: "Adobe's generative image tool, built into Photoshop and Express.", icon: "fa-image", url: "https://www.adobe.com/products/firefly.html" },
+                    { id: 25, name: "Leonardo AI", category: "image-generation", categoryLabel: "Image Generation", description: "Image generator popular for game art and concept design.", icon: "fa-image", url: "https://leonardo.ai" },
+                    { id: 26, name: "Ideogram", category: "image-generation", categoryLabel: "Image Generation", description: "AI image generator known for rendering clean, readable text in images.", icon: "fa-image", url: "https://ideogram.ai" },
+                    { id: 27, name: "Canva", category: "image-generation", categoryLabel: "Image Generation", description: "Design app with built-in text-to-image generation (Magic Media).", icon: "fa-image", url: "https://www.canva.com" },
+                    { id: 28, name: "Playground", category: "image-generation", categoryLabel: "Image Generation", description: "Free-to-start AI image generator with a full editing canvas.", icon: "fa-image", url: "https://playground.com" },
+                    { id: 29, name: "Recraft", category: "image-generation", categoryLabel: "Image Generation", description: "AI tool focused on vector graphics, icons, and brand assets.", icon: "fa-image", url: "https://www.recraft.ai" },
+                    { id: 30, name: "Krea", category: "image-generation", categoryLabel: "Image Generation", description: "Real-time AI image generation, enhancement, and upscaling.", icon: "fa-image", url: "https://www.krea.ai" },
+                    { id: 31, name: "Runway", category: "video", categoryLabel: "Video", description: "AI video generation and editing suite used by filmmakers.", icon: "fa-video", url: "https://runwayml.com" },
+                    { id: 32, name: "Pika", category: "video", categoryLabel: "Video", description: "Text-to-video generator for short, AI-animated clips.", icon: "fa-video", url: "https://pika.art" },
+                    { id: 33, name: "Sora", category: "video", categoryLabel: "Video", description: "OpenAI's text-to-video generation model.", icon: "fa-video", url: "https://openai.com/sora" },
+                    { id: 34, name: "Synthesia", category: "video", categoryLabel: "Video", description: "Creates videos of an AI avatar reading your script aloud.", icon: "fa-video", url: "https://www.synthesia.io" },
+                    { id: 35, name: "HeyGen", category: "video", categoryLabel: "Video", description: "AI avatar video generator popular for marketing and training videos.", icon: "fa-video", url: "https://www.heygen.com" },
+                    { id: 36, name: "Descript", category: "video", categoryLabel: "Video", description: "Edits video and podcasts by editing the text transcript directly.", icon: "fa-video", url: "https://www.descript.com" },
+                    { id: 37, name: "CapCut", category: "video", categoryLabel: "Video", description: "Video editor with AI features like auto-captions and background removal.", icon: "fa-video", url: "https://www.capcut.com" },
+                    { id: 38, name: "Luma Dream Machine", category: "video", categoryLabel: "Video", description: "Text or image-to-video generator known for realistic motion.", icon: "fa-video", url: "https://lumalabs.ai" },
+                    { id: 39, name: "Kaiber", category: "video", categoryLabel: "Video", description: "Turns images, audio, or text into stylized AI music videos.", icon: "fa-video", url: "https://kaiber.ai" },
+                    { id: 40, name: "Opus Clip", category: "video", categoryLabel: "Video", description: "Automatically turns long videos into short clips for social media.", icon: "fa-video", url: "https://www.opus.pro" },
+                    { id: 41, name: "ElevenLabs", category: "audio-and-voice", categoryLabel: "Audio & Voice", description: "Realistic AI text-to-speech and voice cloning.", icon: "fa-microphone-lines", url: "https://elevenlabs.io" },
+                    { id: 42, name: "Suno", category: "audio-and-voice", categoryLabel: "Audio & Voice", description: "Generates full songs, including vocals, from a text prompt.", icon: "fa-microphone-lines", url: "https://suno.com" },
+                    { id: 43, name: "Udio", category: "audio-and-voice", categoryLabel: "Audio & Voice", description: "AI music generator for creating original songs from prompts.", icon: "fa-microphone-lines", url: "https://www.udio.com" },
+                    { id: 44, name: "Murf", category: "audio-and-voice", categoryLabel: "Audio & Voice", description: "Studio-quality AI voiceovers for videos and presentations.", icon: "fa-microphone-lines", url: "https://murf.ai" },
+                    { id: 45, name: "Adobe Podcast", category: "audio-and-voice", categoryLabel: "Audio & Voice", description: "Cleans up and enhances recorded audio automatically.", icon: "fa-microphone-lines", url: "https://podcast.adobe.com" },
+                    { id: 46, name: "Play.ht", category: "audio-and-voice", categoryLabel: "Audio & Voice", description: "Text-to-speech app and API with a large voice library.", icon: "fa-microphone-lines", url: "https://play.ht" },
+                    { id: 47, name: "Voicemod", category: "audio-and-voice", categoryLabel: "Audio & Voice", description: "Real-time AI voice changer for calls and livestreams.", icon: "fa-microphone-lines", url: "https://www.voicemod.net" },
+                    { id: 48, name: "Krisp", category: "audio-and-voice", categoryLabel: "Audio & Voice", description: "Removes background noise from calls in real time.", icon: "fa-microphone-lines", url: "https://krisp.ai" },
+                    { id: 49, name: "GitHub Copilot", category: "coding-and-dev", categoryLabel: "Coding & Dev", description: "AI pair programmer built directly into your code editor.", icon: "fa-code", url: "https://github.com/features/copilot" },
+                    { id: 50, name: "Cursor", category: "coding-and-dev", categoryLabel: "Coding & Dev", description: "AI-first code editor built around working with a whole codebase.", icon: "fa-code", url: "https://www.cursor.com" },
+                    { id: 51, name: "Claude Code", category: "coding-and-dev", categoryLabel: "Coding & Dev", description: "Anthropic's agentic coding tool for the terminal and IDE.", icon: "fa-code", url: "https://www.anthropic.com/claude-code" },
+                    { id: 52, name: "Replit", category: "coding-and-dev", categoryLabel: "Coding & Dev", description: "Browser-based coding environment with a built-in AI agent.", icon: "fa-code", url: "https://replit.com" },
+                    { id: 53, name: "Tabnine", category: "coding-and-dev", categoryLabel: "Coding & Dev", description: "AI code completion that can run privately on your own code.", icon: "fa-code", url: "https://www.tabnine.com" },
+                    { id: 54, name: "v0", category: "coding-and-dev", categoryLabel: "Coding & Dev", description: "Generates React UI components from plain-language descriptions.", icon: "fa-code", url: "https://v0.dev" },
+                    { id: 55, name: "Lovable", category: "coding-and-dev", categoryLabel: "Coding & Dev", description: "Builds full web apps from a plain-language description.", icon: "fa-code", url: "https://lovable.dev" },
+                    { id: 56, name: "Bolt.new", category: "coding-and-dev", categoryLabel: "Coding & Dev", description: "Generates and runs full-stack apps directly in the browser.", icon: "fa-code", url: "https://bolt.new" },
+                    { id: 57, name: "Windsurf", category: "coding-and-dev", categoryLabel: "Coding & Dev", description: "AI coding assistant and editor for autocompletion and chat.", icon: "fa-code", url: "https://windsurf.com" },
+                    { id: 58, name: "Sourcegraph Cody", category: "coding-and-dev", categoryLabel: "Coding & Dev", description: "AI coding assistant that understands your entire codebase.", icon: "fa-code", url: "https://sourcegraph.com/cody" },
+                    { id: 59, name: "n8n", category: "productivity-and-automation", categoryLabel: "Productivity & Automation", description: "Open-source workflow automation tool with built-in AI-agent nodes.", icon: "fa-gears", url: "https://n8n.io" },
+                    { id: 60, name: "Zapier", category: "productivity-and-automation", categoryLabel: "Productivity & Automation", description: "Connects apps together with automated, no-code workflows.", icon: "fa-gears", url: "https://zapier.com" },
+                    { id: 61, name: "Make", category: "productivity-and-automation", categoryLabel: "Productivity & Automation", description: "Visual automation builder for connecting apps and APIs.", icon: "fa-gears", url: "https://www.make.com" },
+                    { id: 62, name: "Motion", category: "productivity-and-automation", categoryLabel: "Productivity & Automation", description: "AI calendar that automatically schedules your tasks around meetings.", icon: "fa-gears", url: "https://www.usemotion.com" },
+                    { id: 63, name: "Reclaim.ai", category: "productivity-and-automation", categoryLabel: "Productivity & Automation", description: "Protects focus time by auto-scheduling habits and tasks.", icon: "fa-gears", url: "https://reclaim.ai" },
+                    { id: 64, name: "Superhuman", category: "productivity-and-automation", categoryLabel: "Productivity & Automation", description: "Email client with AI-written replies and fast inbox triage.", icon: "fa-gears", url: "https://superhuman.com" },
+                    { id: 65, name: "Otter.ai", category: "productivity-and-automation", categoryLabel: "Productivity & Automation", description: "Records and transcribes meetings with AI-generated summaries.", icon: "fa-gears", url: "https://otter.ai" },
+                    { id: 66, name: "Fireflies.ai", category: "productivity-and-automation", categoryLabel: "Productivity & Automation", description: "Meeting recorder and note-taker that joins your video calls.", icon: "fa-gears", url: "https://fireflies.ai" },
+                    { id: 67, name: "Airtable", category: "productivity-and-automation", categoryLabel: "Productivity & Automation", description: "Database and spreadsheet hybrid with AI fields built in.", icon: "fa-gears", url: "https://www.airtable.com" },
+                    { id: 68, name: "Grain", category: "productivity-and-automation", categoryLabel: "Productivity & Automation", description: "Records calls and automatically creates shareable video highlights.", icon: "fa-gears", url: "https://grain.com" },
+                    { id: 69, name: "Fathom", category: "productivity-and-automation", categoryLabel: "Productivity & Automation", description: "Free AI notetaker that records and summarizes video calls.", icon: "fa-gears", url: "https://fathom.video" },
+                    { id: 70, name: "Elicit", category: "research-and-search", categoryLabel: "Research & Search", description: "AI research assistant for finding and summarizing academic papers.", icon: "fa-magnifying-glass", url: "https://elicit.com" },
+                    { id: 71, name: "Consensus", category: "research-and-search", categoryLabel: "Research & Search", description: "Search engine that answers questions using scientific papers.", icon: "fa-magnifying-glass", url: "https://consensus.app" },
+                    { id: 72, name: "NotebookLM", category: "research-and-search", categoryLabel: "Research & Search", description: "Google's AI notebook that answers questions from your own documents.", icon: "fa-magnifying-glass", url: "https://notebooklm.google" },
+                    { id: 73, name: "Scite", category: "research-and-search", categoryLabel: "Research & Search", description: "Shows how a research paper has been cited by later studies.", icon: "fa-magnifying-glass", url: "https://scite.ai" },
+                    { id: 74, name: "SciSpace", category: "research-and-search", categoryLabel: "Research & Search", description: "Helps read, summarize, and get explanations of academic papers.", icon: "fa-magnifying-glass", url: "https://typeset.io" },
+                    { id: 75, name: "Semantic Scholar", category: "research-and-search", categoryLabel: "Research & Search", description: "Free AI-powered search engine for scientific literature.", icon: "fa-magnifying-glass", url: "https://www.semanticscholar.org" },
+                    { id: 76, name: "Gamma", category: "design-and-presentation", categoryLabel: "Design & Presentation", description: "Generates full slide decks and pages from a text outline.", icon: "fa-palette", url: "https://gamma.app" },
+                    { id: 77, name: "Beautiful.ai", category: "design-and-presentation", categoryLabel: "Design & Presentation", description: "Presentation tool that auto-designs slides as you type.", icon: "fa-palette", url: "https://www.beautiful.ai" },
+                    { id: 78, name: "Tome", category: "design-and-presentation", categoryLabel: "Design & Presentation", description: "Generates narrative presentations and one-pagers from a prompt.", icon: "fa-palette", url: "https://tome.app" },
+                    { id: 79, name: "Framer", category: "design-and-presentation", categoryLabel: "Design & Presentation", description: "Generates full, publishable websites from a text prompt.", icon: "fa-palette", url: "https://www.framer.com" },
+                    { id: 80, name: "Uizard", category: "design-and-presentation", categoryLabel: "Design & Presentation", description: "Turns sketches or text into app and website mockups.", icon: "fa-palette", url: "https://uizard.io" },
+                    { id: 81, name: "Galileo AI", category: "design-and-presentation", categoryLabel: "Design & Presentation", description: "Generates editable UI designs from a text description.", icon: "fa-palette", url: "https://www.usegalileo.ai" },
+                    { id: 82, name: "Surfer SEO", category: "marketing-and-seo", categoryLabel: "Marketing & SEO", description: "Optimizes written content for search rankings using AI analysis.", icon: "fa-bullhorn", url: "https://surferseo.com" },
+                    { id: 83, name: "Semrush", category: "marketing-and-seo", categoryLabel: "Marketing & SEO", description: "SEO and marketing suite with AI content and keyword tools.", icon: "fa-bullhorn", url: "https://www.semrush.com" },
+                    { id: 84, name: "HubSpot", category: "marketing-and-seo", categoryLabel: "Marketing & SEO", description: "CRM and marketing platform with built-in AI content tools.", icon: "fa-bullhorn", url: "https://www.hubspot.com" },
+                    { id: 85, name: "AdCreative.ai", category: "marketing-and-seo", categoryLabel: "Marketing & SEO", description: "Generates ad creatives and banners optimized for conversions.", icon: "fa-bullhorn", url: "https://www.adcreative.ai" },
+                    { id: 86, name: "Copysmith", category: "marketing-and-seo", categoryLabel: "Marketing & SEO", description: "AI copywriting tool built for e-commerce product listings.", icon: "fa-bullhorn", url: "https://copysmith.ai" },
+                    { id: 87, name: "Predis.ai", category: "marketing-and-seo", categoryLabel: "Marketing & SEO", description: "Generates social media posts and captions from a product link.", icon: "fa-bullhorn", url: "https://predis.ai" },
+                    { id: 88, name: "Julius AI", category: "data-and-analytics", categoryLabel: "Data & Analytics", description: "Analyzes and charts spreadsheet data through a chat interface.", icon: "fa-chart-line", url: "https://julius.ai" },
+                    { id: 89, name: "Akkio", category: "data-and-analytics", categoryLabel: "Data & Analytics", description: "No-code AI tool for building predictive models from your data.", icon: "fa-chart-line", url: "https://akkio.com" },
+                    { id: 90, name: "Obviously AI", category: "data-and-analytics", categoryLabel: "Data & Analytics", description: "Builds machine-learning predictions without writing any code.", icon: "fa-chart-line", url: "https://www.obviously.ai" },
+                    { id: 91, name: "Tableau", category: "data-and-analytics", categoryLabel: "Data & Analytics", description: "Data visualization platform with AI-generated insights built in.", icon: "fa-chart-line", url: "https://www.tableau.com" },
+                    { id: 92, name: "D-ID", category: "3d-avatars-and-photo", categoryLabel: "3D, Avatars & Photo", description: "Turns a photo and script into a talking AI avatar video.", icon: "fa-cube", url: "https://www.d-id.com" },
+                    { id: 93, name: "Ready Player Me", category: "3d-avatars-and-photo", categoryLabel: "3D, Avatars & Photo", description: "Creates a cross-app 3D avatar from a single selfie.", icon: "fa-cube", url: "https://readyplayer.me" },
+                    { id: 94, name: "Meshy", category: "3d-avatars-and-photo", categoryLabel: "3D, Avatars & Photo", description: "Generates 3D models from text descriptions or images.", icon: "fa-cube", url: "https://www.meshy.ai" },
+                    { id: 95, name: "Remove.bg", category: "3d-avatars-and-photo", categoryLabel: "3D, Avatars & Photo", description: "Instantly removes the background from any photo.", icon: "fa-cube", url: "https://www.remove.bg" },
+                    { id: 96, name: "Cleanup.pictures", category: "3d-avatars-and-photo", categoryLabel: "3D, Avatars & Photo", description: "Erases unwanted objects from photos automatically.", icon: "fa-cube", url: "https://cleanup.pictures" },
+                    { id: 97, name: "Photoroom", category: "3d-avatars-and-photo", categoryLabel: "3D, Avatars & Photo", description: "AI photo editor built for product and portrait images.", icon: "fa-cube", url: "https://www.photoroom.com" },
+                    { id: 98, name: "Google AI Studio", category: "developer-platforms", categoryLabel: "Developer Platforms", description: "Free playground for building with Google's Gemini models.", icon: "fa-server", url: "https://aistudio.google.com" },
+                    { id: 99, name: "Hugging Face", category: "developer-platforms", categoryLabel: "Developer Platforms", description: "Hub for open-source AI models, datasets, and live demos.", icon: "fa-server", url: "https://huggingface.co" },
+                    { id: 100, name: "Replicate", category: "developer-platforms", categoryLabel: "Developer Platforms", description: "Runs and combines open-source AI models through a simple API.", icon: "fa-server", url: "https://replicate.com" },
+                    { id: 101, name: "LangChain", category: "developer-platforms", categoryLabel: "Developer Platforms", description: "Framework for building applications powered by language models.", icon: "fa-server", url: "https://www.langchain.com" }
+                ];
 
-<script src="entries.js"></script>
-<script>
-  const TOTAL_DAYS = 15;
-  const log = document.getElementById('log');
+        // Categories (derived from tool data)
+        const categoriesData = [
+                    { slug: "3d-avatars-and-photo", label: "3D, Avatars & Photo" },
+                    { slug: "audio-and-voice", label: "Audio & Voice" },
+                    { slug: "chatbots-and-assistants", label: "Chatbots & Assistants" },
+                    { slug: "coding-and-dev", label: "Coding & Dev" },
+                    { slug: "data-and-analytics", label: "Data & Analytics" },
+                    { slug: "design-and-presentation", label: "Design & Presentation" },
+                    { slug: "developer-platforms", label: "Developer Platforms" },
+                    { slug: "image-generation", label: "Image Generation" },
+                    { slug: "marketing-and-seo", label: "Marketing & SEO" },
+                    { slug: "productivity-and-automation", label: "Productivity & Automation" },
+                    { slug: "research-and-search", label: "Research & Search" },
+                    { slug: "video", label: "Video" },
+                    { slug: "writing-and-content", label: "Writing & Content" }
+                ];
 
-  const sorted = [...ENTRIES].sort((a, b) => b.day - a.day);
+        // Master Prompts Dataset (real data, synced from prompts.js)
+        const promptsData = [
+                    { id: 1, title: "Rewrite this paragraph to sound more", category: "writing-and-content", categoryLabel: "Writing & Content", target: "ChatGPT, Claude, Gemini & more", prompt: "Rewrite this paragraph to sound more concise without losing meaning: [paste text]" },
+                    { id: 2, title: "Write an opening paragraph for a", category: "writing-and-content", categoryLabel: "Writing & Content", target: "ChatGPT, Claude, Gemini & more", prompt: "Write an opening paragraph for a blog post about [topic] that hooks the reader in the first two sentences." },
+                    { id: 3, title: "Turn these bullet points into a", category: "writing-and-content", categoryLabel: "Writing & Content", target: "ChatGPT, Claude, Gemini & more", prompt: "Turn these bullet points into a flowing paragraph: [paste bullets]" },
+                    { id: 4, title: "Suggest 10 alternative titles for this", category: "writing-and-content", categoryLabel: "Writing & Content", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest 10 alternative titles for this piece, ranked from safest to boldest: [paste title or topic]" },
+                    { id: 5, title: "Explain in three different tones: formal", category: "writing-and-content", categoryLabel: "Writing & Content", target: "ChatGPT, Claude, Gemini & more", prompt: "Explain [topic] in three different tones: formal, casual, and humorous." },
+                    { id: 6, title: "Summarize this article in exactly 3", category: "writing-and-content", categoryLabel: "Writing & Content", target: "ChatGPT, Claude, Gemini & more", prompt: "Summarize this article in exactly 3 sentences: [paste article]" },
+                    { id: 7, title: "Continue this story in the same", category: "writing-and-content", categoryLabel: "Writing & Content", target: "ChatGPT, Claude, Gemini & more", prompt: "Continue this story in the same voice and tone: [paste story so far]" },
+                    { id: 8, title: "Identify any unclear or repetitive sentences", category: "writing-and-content", categoryLabel: "Writing & Content", target: "ChatGPT, Claude, Gemini & more", prompt: "Identify any unclear or repetitive sentences in this draft and suggest fixes: [paste draft]" },
+                    { id: 9, title: "Write a short bio, under 50", category: "writing-and-content", categoryLabel: "Writing & Content", target: "ChatGPT, Claude, Gemini & more", prompt: "Write a short bio, under 50 words, for [name or role] that sounds confident but not boastful." },
+                    { id: 10, title: "Turn this technical explanation into something", category: "writing-and-content", categoryLabel: "Writing & Content", target: "ChatGPT, Claude, Gemini & more", prompt: "Turn this technical explanation into something a 12-year-old could understand: [paste text]" },
+                    { id: 11, title: "Write 5 subject lines for an", category: "business-and-marketing", categoryLabel: "Business & Marketing", target: "ChatGPT, Claude, Gemini & more", prompt: "Write 5 subject lines for an email announcing [product or offer], each testing a different angle." },
+                    { id: 12, title: "Draft a cold outreach email to", category: "business-and-marketing", categoryLabel: "Business & Marketing", target: "ChatGPT, Claude, Gemini & more", prompt: "Draft a cold outreach email to [type of prospect] offering [service], under 120 words." },
+                    { id: 13, title: "Create a one-paragraph value proposition for", category: "business-and-marketing", categoryLabel: "Business & Marketing", target: "ChatGPT, Claude, Gemini & more", prompt: "Create a one-paragraph value proposition for [business idea]." },
+                    { id: 14, title: "List 10 possible objections a customer", category: "business-and-marketing", categoryLabel: "Business & Marketing", target: "ChatGPT, Claude, Gemini & more", prompt: "List 10 possible objections a customer might have to buying [product], and a short response to each." },
+                    { id: 15, title: "Write a LinkedIn post announcing in", category: "business-and-marketing", categoryLabel: "Business & Marketing", target: "ChatGPT, Claude, Gemini & more", prompt: "Write a LinkedIn post announcing [milestone or launch] in a confident, non-salesy tone." },
+                    { id: 16, title: "Generate 5 taglines for that emphasize", category: "business-and-marketing", categoryLabel: "Business & Marketing", target: "ChatGPT, Claude, Gemini & more", prompt: "Generate 5 taglines for [brand name] that emphasize [key benefit]." },
+                    { id: 17, title: "Draft a follow-up message for a", category: "business-and-marketing", categoryLabel: "Business & Marketing", target: "ChatGPT, Claude, Gemini & more", prompt: "Draft a follow-up message for a client who hasn't responded in a week, friendly but direct." },
+                    { id: 18, title: "Write a short case study outline", category: "business-and-marketing", categoryLabel: "Business & Marketing", target: "ChatGPT, Claude, Gemini & more", prompt: "Write a short case study outline based on this result: [paste result or data]" },
+                    { id: 19, title: "Suggest 3 pricing page headline options", category: "business-and-marketing", categoryLabel: "Business & Marketing", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest 3 pricing page headline options for [product], each targeting a different customer motivation." },
+                    { id: 20, title: "Turn this list of features into", category: "business-and-marketing", categoryLabel: "Business & Marketing", target: "ChatGPT, Claude, Gemini & more", prompt: "Turn this list of features into customer-facing benefits: [paste feature list]" },
+                    { id: 21, title: "Explain what this code does, line", category: "coding-and-tech", categoryLabel: "Coding & Tech", target: "ChatGPT, Claude, Gemini & more", prompt: "Explain what this code does, line by line, in plain language: [paste code]" },
+                    { id: 22, title: "Find potential bugs or edge cases", category: "coding-and-tech", categoryLabel: "Coding & Tech", target: "ChatGPT, Claude, Gemini & more", prompt: "Find potential bugs or edge cases in this function: [paste code]" },
+                    { id: 23, title: "Refactor this code for readability without", category: "coding-and-tech", categoryLabel: "Coding & Tech", target: "ChatGPT, Claude, Gemini & more", prompt: "Refactor this code for readability without changing its behavior: [paste code]" },
+                    { id: 24, title: "Write unit tests for this function", category: "coding-and-tech", categoryLabel: "Coding & Tech", target: "ChatGPT, Claude, Gemini & more", prompt: "Write unit tests for this function, covering normal and edge cases: [paste code]" },
+                    { id: 25, title: "Convert this code from to ", category: "coding-and-tech", categoryLabel: "Coding & Tech", target: "ChatGPT, Claude, Gemini & more", prompt: "Convert this code from [language A] to [language B]: [paste code]" },
+                    { id: 26, title: "Suggest a simple database schema for", category: "coding-and-tech", categoryLabel: "Coding & Tech", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest a simple database schema for an app that does [description]." },
+                    { id: 27, title: "Write a regex that matches ", category: "coding-and-tech", categoryLabel: "Coding & Tech", target: "ChatGPT, Claude, Gemini & more", prompt: "Write a regex that matches [pattern description], and explain how it works." },
+                    { id: 28, title: "Review this API design and suggest", category: "coding-and-tech", categoryLabel: "Coding & Tech", target: "ChatGPT, Claude, Gemini & more", prompt: "Review this API design and suggest improvements for clarity and consistency: [paste API spec]" },
+                    { id: 29, title: "Explain the tradeoffs between and for", category: "coding-and-tech", categoryLabel: "Coding & Tech", target: "ChatGPT, Claude, Gemini & more", prompt: "Explain the tradeoffs between [option A] and [option B] for [use case]." },
+                    { id: 30, title: "Write a clear commit message summarizing", category: "coding-and-tech", categoryLabel: "Coding & Tech", target: "ChatGPT, Claude, Gemini & more", prompt: "Write a clear commit message summarizing these changes: [paste diff or summary]" },
+                    { id: 31, title: "A in the style of ", category: "image-generation", categoryLabel: "Image Generation", target: "ChatGPT, Claude, Gemini & more", prompt: "A [subject] in the style of [art style], soft lighting, high detail, [color palette]." },
+                    { id: 32, title: "Minimalist logo concept for a brand", category: "image-generation", categoryLabel: "Image Generation", target: "ChatGPT, Claude, Gemini & more", prompt: "Minimalist logo concept for a [industry] brand, flat design, two colors only." },
+                    { id: 33, title: "standing in , cinematic lighting, wide", category: "image-generation", categoryLabel: "Image Generation", target: "ChatGPT, Claude, Gemini & more", prompt: "[Character description] standing in [setting], cinematic lighting, wide shot." },
+                    { id: 34, title: "Isometric illustration of , clean vector", category: "image-generation", categoryLabel: "Image Generation", target: "ChatGPT, Claude, Gemini & more", prompt: "Isometric illustration of [object or scene], clean vector style, pastel colors." },
+                    { id: 35, title: "Product photo of on a plain", category: "image-generation", categoryLabel: "Image Generation", target: "ChatGPT, Claude, Gemini & more", prompt: "Product photo of [product] on a plain background, studio lighting, high resolution." },
+                    { id: 36, title: "rendered as a watercolor painting, loose", category: "image-generation", categoryLabel: "Image Generation", target: "ChatGPT, Claude, Gemini & more", prompt: "[Subject] rendered as a watercolor painting, loose brush strokes, muted tones." },
+                    { id: 37, title: "Cozy interior of a , warm", category: "image-generation", categoryLabel: "Image Generation", target: "ChatGPT, Claude, Gemini & more", prompt: "Cozy interior of a [type of room], warm lighting, detailed textures." },
+                    { id: 38, title: "Flat icon set representing , consistent", category: "image-generation", categoryLabel: "Image Generation", target: "ChatGPT, Claude, Gemini & more", prompt: "Flat icon set representing [theme], consistent line weight, single accent color." },
+                    { id: 39, title: "in a fantasy setting, glowing details", category: "image-generation", categoryLabel: "Image Generation", target: "ChatGPT, Claude, Gemini & more", prompt: "[Animal or creature] in a fantasy setting, glowing details, dramatic atmosphere." },
+                    { id: 40, title: "Abstract background pattern using , geometric", category: "image-generation", categoryLabel: "Image Generation", target: "ChatGPT, Claude, Gemini & more", prompt: "Abstract background pattern using [color scheme], geometric shapes, subtle gradient." },
+                    { id: 41, title: "Break this goal down into a", category: "productivity-and-planning", categoryLabel: "Productivity & Planning", target: "ChatGPT, Claude, Gemini & more", prompt: "Break this goal down into a 30-day action plan: [describe goal]" },
+                    { id: 42, title: "Turn this messy to-do list into", category: "productivity-and-planning", categoryLabel: "Productivity & Planning", target: "ChatGPT, Claude, Gemini & more", prompt: "Turn this messy to-do list into a prioritized plan for today: [paste list]" },
+                    { id: 43, title: "Suggest a weekly schedule template for", category: "productivity-and-planning", categoryLabel: "Productivity & Planning", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest a weekly schedule template for someone balancing [work situation] and [personal commitment]." },
+                    { id: 44, title: "Identify which of these tasks can", category: "productivity-and-planning", categoryLabel: "Productivity & Planning", target: "ChatGPT, Claude, Gemini & more", prompt: "Identify which of these tasks can be delegated, automated, or dropped: [paste task list]" },
+                    { id: 45, title: "Write a short daily reflection template", category: "productivity-and-planning", categoryLabel: "Productivity & Planning", target: "ChatGPT, Claude, Gemini & more", prompt: "Write a short daily reflection template with 3 questions to end the workday." },
+                    { id: 46, title: "Turn this project idea into a", category: "productivity-and-planning", categoryLabel: "Productivity & Planning", target: "ChatGPT, Claude, Gemini & more", prompt: "Turn this project idea into a list of concrete first steps: [describe idea]" },
+                    { id: 47, title: "Suggest a simple system for tracking", category: "productivity-and-planning", categoryLabel: "Productivity & Planning", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest a simple system for tracking [type of habit or metric]." },
+                    { id: 48, title: "Draft an agenda for a 30-minute", category: "productivity-and-planning", categoryLabel: "Productivity & Planning", target: "ChatGPT, Claude, Gemini & more", prompt: "Draft an agenda for a 30-minute meeting about [topic]." },
+                    { id: 49, title: "Summarize this meeting transcript into action", category: "productivity-and-planning", categoryLabel: "Productivity & Planning", target: "ChatGPT, Claude, Gemini & more", prompt: "Summarize this meeting transcript into action items with owners: [paste transcript]" },
+                    { id: 50, title: "Suggest 3 ways to simplify this", category: "productivity-and-planning", categoryLabel: "Productivity & Planning", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest 3 ways to simplify this workflow: [describe current process]" },
+                    { id: 51, title: "Explain using a simple real-world analogy", category: "learning-and-research", categoryLabel: "Learning & Research", target: "ChatGPT, Claude, Gemini & more", prompt: "Explain [concept] using a simple real-world analogy." },
+                    { id: 52, title: "Create a beginner-friendly study plan for", category: "learning-and-research", categoryLabel: "Learning & Research", target: "ChatGPT, Claude, Gemini & more", prompt: "Create a beginner-friendly study plan for learning [skill or topic] in 4 weeks." },
+                    { id: 53, title: "Quiz me with 5 questions on", category: "learning-and-research", categoryLabel: "Learning & Research", target: "ChatGPT, Claude, Gemini & more", prompt: "Quiz me with 5 questions on [topic] to test my understanding." },
+                    { id: 54, title: "Summarize the key arguments for and", category: "learning-and-research", categoryLabel: "Learning & Research", target: "ChatGPT, Claude, Gemini & more", prompt: "Summarize the key arguments for and against [topic or debate]." },
+                    { id: 55, title: "Explain as if I already know", category: "learning-and-research", categoryLabel: "Learning & Research", target: "ChatGPT, Claude, Gemini & more", prompt: "Explain [term] as if I already know [related field], skip the basics." },
+                    { id: 56, title: "List the most common misconceptions about", category: "learning-and-research", categoryLabel: "Learning & Research", target: "ChatGPT, Claude, Gemini & more", prompt: "List the most common misconceptions about [topic] and correct each one." },
+                    { id: 57, title: "Compare and across cost, time, and", category: "learning-and-research", categoryLabel: "Learning & Research", target: "ChatGPT, Claude, Gemini & more", prompt: "Compare [option A] and [option B] across cost, time, and difficulty." },
+                    { id: 58, title: "Turn these notes into a set", category: "learning-and-research", categoryLabel: "Learning & Research", target: "ChatGPT, Claude, Gemini & more", prompt: "Turn these notes into a set of flashcards: [paste notes]" },
+                    { id: 59, title: "Give me a step-by-step explanation of", category: "learning-and-research", categoryLabel: "Learning & Research", target: "ChatGPT, Claude, Gemini & more", prompt: "Give me a step-by-step explanation of how [process] works." },
+                    { id: 60, title: "Suggest 5 good follow-up questions to", category: "learning-and-research", categoryLabel: "Learning & Research", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest 5 good follow-up questions to ask after learning about [topic]." },
+                    { id: 61, title: "Write 3 Instagram captions for a", category: "social-media", categoryLabel: "Social Media", target: "ChatGPT, Claude, Gemini & more", prompt: "Write 3 Instagram captions for a photo of [description], each with a different tone." },
+                    { id: 62, title: "Turn this blog post into a", category: "social-media", categoryLabel: "Social Media", target: "ChatGPT, Claude, Gemini & more", prompt: "Turn this blog post into a 5-tweet thread: [paste post]" },
+                    { id: 63, title: "Suggest 10 relevant hashtags for a", category: "social-media", categoryLabel: "Social Media", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest 10 relevant hashtags for a post about [topic]." },
+                    { id: 64, title: "Write a short, scroll-stopping hook for", category: "social-media", categoryLabel: "Social Media", target: "ChatGPT, Claude, Gemini & more", prompt: "Write a short, scroll-stopping hook for a video about [topic]." },
+                    { id: 65, title: "Draft a week of social media", category: "social-media", categoryLabel: "Social Media", target: "ChatGPT, Claude, Gemini & more", prompt: "Draft a week of social media post ideas for a [type of business]." },
+                    { id: 66, title: "Rewrite this caption to sound more", category: "social-media", categoryLabel: "Social Media", target: "ChatGPT, Claude, Gemini & more", prompt: "Rewrite this caption to sound more personal and less promotional: [paste caption]" },
+                    { id: 67, title: "Suggest 3 content series ideas for", category: "social-media", categoryLabel: "Social Media", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest 3 content series ideas for a [niche] social media account." },
+                    { id: 68, title: "Write a poll question and 3", category: "social-media", categoryLabel: "Social Media", target: "ChatGPT, Claude, Gemini & more", prompt: "Write a poll question and 3 answer options about [topic] to boost engagement." },
+                    { id: 69, title: "Turn this customer review into a", category: "social-media", categoryLabel: "Social Media", target: "ChatGPT, Claude, Gemini & more", prompt: "Turn this customer review into a short, shareable testimonial post: [paste review]" },
+                    { id: 70, title: "Suggest a content calendar theme for", category: "social-media", categoryLabel: "Social Media", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest a content calendar theme for each day of the week for a [niche] account." },
+                    { id: 71, title: "Rewrite this resume bullet point to", category: "career-and-resume", categoryLabel: "Career & Resume", target: "ChatGPT, Claude, Gemini & more", prompt: "Rewrite this resume bullet point to focus on measurable results: [paste bullet]" },
+                    { id: 72, title: "Write a short, confident answer to", category: "career-and-resume", categoryLabel: "Career & Resume", target: "ChatGPT, Claude, Gemini & more", prompt: "Write a short, confident answer to 'Tell me about yourself' based on this background: [paste background]" },
+                    { id: 73, title: "Suggest 5 interview questions I should", category: "career-and-resume", categoryLabel: "Career & Resume", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest 5 interview questions I should prepare for when applying to a [role] position." },
+                    { id: 74, title: "Turn this list of responsibilities into", category: "career-and-resume", categoryLabel: "Career & Resume", target: "ChatGPT, Claude, Gemini & more", prompt: "Turn this list of responsibilities into resume-ready achievement statements: [paste list]" },
+                    { id: 75, title: "Write a short LinkedIn headline for", category: "career-and-resume", categoryLabel: "Career & Resume", target: "ChatGPT, Claude, Gemini & more", prompt: "Write a short LinkedIn headline for someone who does [job or skill]." },
+                    { id: 76, title: "Draft a polite email negotiating a", category: "career-and-resume", categoryLabel: "Career & Resume", target: "ChatGPT, Claude, Gemini & more", prompt: "Draft a polite email negotiating a higher salary offer for [role]." },
+                    { id: 77, title: "Suggest talking points for a performance", category: "career-and-resume", categoryLabel: "Career & Resume", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest talking points for a performance review, based on these accomplishments: [paste list]" },
+                    { id: 78, title: "Write a short thank-you note to", category: "career-and-resume", categoryLabel: "Career & Resume", target: "ChatGPT, Claude, Gemini & more", prompt: "Write a short thank-you note to send after a job interview for [role]." },
+                    { id: 79, title: "Help me phrase this career change", category: "career-and-resume", categoryLabel: "Career & Resume", target: "ChatGPT, Claude, Gemini & more", prompt: "Help me phrase this career change in a way that sounds intentional, not random: [describe situation]" },
+                    { id: 80, title: "Suggest 3 questions to ask an", category: "career-and-resume", categoryLabel: "Career & Resume", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest 3 questions to ask an interviewer that show genuine interest in the role." },
+                    { id: 81, title: "Suggest a simple weekly meal plan", category: "personal-and-life", categoryLabel: "Personal & Life", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest a simple weekly meal plan for [dietary preference], with a grocery list." },
+                    { id: 82, title: "Help me plan a -day trip", category: "personal-and-life", categoryLabel: "Personal & Life", target: "ChatGPT, Claude, Gemini & more", prompt: "Help me plan a [number]-day trip to [destination] with a mix of sightseeing and rest." },
+                    { id: 83, title: "Suggest a thoughtful gift for someone", category: "personal-and-life", categoryLabel: "Personal & Life", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest a thoughtful gift for someone who likes [interests], under [budget]." },
+                    { id: 84, title: "Write a heartfelt but not overly", category: "personal-and-life", categoryLabel: "Personal & Life", target: "ChatGPT, Claude, Gemini & more", prompt: "Write a heartfelt but not overly long message for [occasion]." },
+                    { id: 85, title: "Suggest a simple budget breakdown for", category: "personal-and-life", categoryLabel: "Personal & Life", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest a simple budget breakdown for someone earning [income] with goals like [goals]." },
+                    { id: 86, title: "Give me 5 ideas for a", category: "personal-and-life", categoryLabel: "Personal & Life", target: "ChatGPT, Claude, Gemini & more", prompt: "Give me 5 ideas for a low-key weekend that doesn't involve screens." },
+                    { id: 87, title: "Suggest a beginner workout routine for", category: "personal-and-life", categoryLabel: "Personal & Life", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest a beginner workout routine for someone who can train [days per week]." },
+                    { id: 88, title: "Help me write a polite message", category: "personal-and-life", categoryLabel: "Personal & Life", target: "ChatGPT, Claude, Gemini & more", prompt: "Help me write a polite message declining [invitation or request] without over-explaining." },
+                    { id: 89, title: "Suggest a reading list of 5", category: "personal-and-life", categoryLabel: "Personal & Life", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest a reading list of 5 books on [topic], from beginner to advanced." },
+                    { id: 90, title: "Write a short journal prompt to", category: "personal-and-life", categoryLabel: "Personal & Life", target: "ChatGPT, Claude, Gemini & more", prompt: "Write a short journal prompt to reflect on [life area] at the end of the week." },
+                    { id: 91, title: "Explain what this dataset seems to", category: "data-and-analysis", categoryLabel: "Data & Analysis", target: "ChatGPT, Claude, Gemini & more", prompt: "Explain what this dataset seems to show, in plain language: [paste data summary]" },
+                    { id: 92, title: "Suggest 3 charts that would best", category: "data-and-analysis", categoryLabel: "Data & Analysis", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest 3 charts that would best represent this data: [describe data]" },
+                    { id: 93, title: "Identify any outliers or anomalies worth", category: "data-and-analysis", categoryLabel: "Data & Analysis", target: "ChatGPT, Claude, Gemini & more", prompt: "Identify any outliers or anomalies worth investigating in this data: [paste data]" },
+                    { id: 94, title: "Turn these numbers into a short", category: "data-and-analysis", categoryLabel: "Data & Analysis", target: "ChatGPT, Claude, Gemini & more", prompt: "Turn these numbers into a short summary a non-technical manager could understand: [paste numbers]" },
+                    { id: 95, title: "Suggest what additional data would help", category: "data-and-analysis", categoryLabel: "Data & Analysis", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest what additional data would help answer this question: [describe question]" },
+                    { id: 96, title: "Write a SQL query to find", category: "data-and-analysis", categoryLabel: "Data & Analysis", target: "ChatGPT, Claude, Gemini & more", prompt: "Write a SQL query to find [describe what you need] from a table with these columns: [list columns]" },
+                    { id: 97, title: "Explain the difference between correlation and", category: "data-and-analysis", categoryLabel: "Data & Analysis", target: "ChatGPT, Claude, Gemini & more", prompt: "Explain the difference between correlation and causation using this example: [describe example]" },
+                    { id: 98, title: "Suggest a simple A/B test to", category: "data-and-analysis", categoryLabel: "Data & Analysis", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest a simple A/B test to validate this idea: [describe idea]" },
+                    { id: 99, title: "Turn this spreadsheet summary into 3", category: "data-and-analysis", categoryLabel: "Data & Analysis", target: "ChatGPT, Claude, Gemini & more", prompt: "Turn this spreadsheet summary into 3 key takeaways for a presentation: [paste summary]" },
+                    { id: 100, title: "Suggest what metric best measures success", category: "data-and-analysis", categoryLabel: "Data & Analysis", target: "ChatGPT, Claude, Gemini & more", prompt: "Suggest what metric best measures success for [goal or project]." }
+                ];
 
-  document.getElementById('day-label').textContent = `Day ${sorted[0]?.day || 0} of ${TOTAL_DAYS}`;
-  const fillEl = document.getElementById('progress-fill');
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    fillEl.style.width = `${((sorted[0]?.day || 0) / TOTAL_DAYS) * 100}%`;
-  }));
 
-  sorted.forEach(e => {
-    const entry = document.createElement('article');
-    entry.className = 'entry';
-    entry.innerHTML = `
-      <div class="daymark">${String(e.day).padStart(2, '0')}</div>
-      <div class="meta">
-        <span>${e.date}</span>
-        <span class="badge">Day ${e.day}</span>
-      </div>
-      <h2>${e.tool}</h2>
-      <a class="tool-link" href="${e.url}" target="_blank" rel="noopener noreferrer">Visit ${e.tool} &rarr;</a>
-      <p class="desc">${e.description}</p>
-      <div class="prompt-box">
-        <div class="label">Prompts to try with this tool</div>
-        <ul>${e.prompts.map(p => `<li>${p}</li>`).join('')}</ul>
-      </div>
-    `;
-    log.appendChild(entry);
-  });
+        // DOM Initialization
+        document.addEventListener("DOMContentLoaded", () => {
+            renderCategoryPills();
+            renderTools('all', '');
+            renderPrompts('');
+            setupSearch();
+            setupPromptsSearch();
+            setupMobileMenu();
+        });
 
-  // Reveal entries as they scroll into view
-  const observer = new IntersectionObserver((items) => {
-    items.forEach(item => {
-      if (item.isIntersecting) {
-        item.target.classList.add('is-visible');
-        observer.unobserve(item.target);
-      }
-    });
-  }, { threshold: 0.15 });
+        function renderCategoryPills() {
+            const container = document.getElementById('category-filters');
+            container.innerHTML = '';
 
-  document.querySelectorAll('.entry').forEach(el => observer.observe(el));
-</script>
+            const allBtn = document.createElement('button');
+            allBtn.dataset.category = 'all';
+            allBtn.className = 'filter-btn active px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-brand-600 text-white shadow-lg transition-all';
+            allBtn.textContent = 'All Tools';
+            container.appendChild(allBtn);
 
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js');
-}
-</script>
-<script src="https://5gvci.com/act/files/tag.min.js?z=11811354" data-cfasync="false" async></script>
-<script src="https://quge5.com/88/tag.min.js" data-zone="281162" async data-cfasync="false"></script>
-<script>(function(s){s.dataset.zone='11811360',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-<script>(function(s){s.dataset.zone='11811363',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-<script src="chat-widget.js"></script>
+            categoriesData.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.dataset.category = cat.slug;
+                btn.className = 'filter-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-dark-800 text-gray-400 border border-white/5 hover:border-white/20 hover:text-white transition-all';
+                btn.textContent = cat.label;
+                container.appendChild(btn);
+            });
+
+            setupFilterListeners();
+        }
+
+        function renderTools(category = 'all', searchQuery = '') {
+            const container = document.getElementById('tools-grid');
+            container.innerHTML = '';
+
+            const filtered = toolsData.filter(tool => {
+                const matchesCategory = category === 'all' || tool.category === category;
+                const q = searchQuery.toLowerCase();
+                const matchesSearch = !q || tool.name.toLowerCase().includes(q) ||
+                                      tool.description.toLowerCase().includes(q) ||
+                                      tool.categoryLabel.toLowerCase().includes(q);
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-gray-500">
+                        <i class="fa-solid fa-ghost text-4xl mb-3 block opacity-40"></i>
+                        No tools found matching your criteria.
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(tool => {
+                const card = document.createElement('div');
+                card.className = "glass-card glass-card-hover rounded-2xl p-6 border border-white/5 flex flex-col justify-between group";
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-brand-600/30 to-brand-cyan/20 border border-brand-500/20 flex items-center justify-center text-brand-cyan group-hover:scale-110 transition-transform">
+                                <i class="fa-solid ${tool.icon} text-xl"></i>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[11px] font-mono text-brand-cyan font-medium">
+                                ${tool.categoryLabel}
+                            </span>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-white group-hover:text-brand-cyan transition-colors mb-2">${tool.name}</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-6">${tool.description}</p>
+                    </div>
+
+                    <div class="flex items-center justify-end pt-4 border-t border-white/5">
+                        <a href="${tool.url}" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-brand-600 hover:text-white border border-white/10 text-xs font-semibold text-gray-300 transition-all flex items-center gap-1.5">
+                            <span>Visit Site</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderPrompts(searchQuery = '') {
+            const container = document.getElementById('prompts-grid');
+            container.innerHTML = '';
+
+            const q = searchQuery.toLowerCase();
+            const filtered = promptsData.filter(p =>
+                !q || p.title.toLowerCase().includes(q) ||
+                p.prompt.toLowerCase().includes(q) ||
+                p.categoryLabel.toLowerCase().includes(q)
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-gray-500">
+                        <i class="fa-solid fa-ghost text-4xl mb-3 block opacity-40"></i>
+                        No prompts found matching your search.
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(p => {
+                const promptCard = document.createElement('div');
+                promptCard.className = "bg-dark-900/80 border border-white/10 rounded-2xl p-5 flex flex-col justify-between";
+
+                promptCard.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-3 gap-2">
+                            <h4 class="text-base font-bold text-white">${p.title}</h4>
+                            <span class="text-[10px] font-mono text-brand-cyan bg-brand-cyan/10 px-2 py-0.5 rounded border border-brand-cyan/20 whitespace-nowrap">${p.categoryLabel}</span>
+                        </div>
+                        <p class="text-xs font-mono text-gray-300 bg-dark-800/90 p-3 rounded-xl border border-white/5 mb-4 leading-relaxed">
+                            ${p.prompt}
+                        </p>
+                    </div>
+                    <button onclick="copyToClipboard('${escapeQuotes(p.prompt)}')" class="w-full py-2 rounded-xl bg-white/5 hover:bg-brand-600/30 border border-white/10 hover:border-brand-500/50 text-xs font-semibold text-gray-300 hover:text-white transition-all flex items-center justify-center gap-2">
+                        <i class="fa-regular fa-copy text-xs"></i>
+                        <span>Copy Prompt</span>
+                    </button>
+                `;
+                container.appendChild(promptCard);
+            });
+        }
+
+        // Helper to escape quotes in prompt strings
+        function escapeQuotes(str) {
+            return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        }
+
+        function setupPromptsSearch() {
+            const input = document.getElementById('prompts-search-input');
+            input.addEventListener('input', (e) => renderPrompts(e.target.value));
+        }
+
+        function setupFilterListeners() {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    buttons.forEach(b => {
+                        b.classList.remove('bg-brand-600', 'text-white', 'shadow-lg');
+                        b.classList.add('bg-dark-800', 'text-gray-400');
+                    });
+                    
+                    e.target.classList.remove('bg-dark-800', 'text-gray-400');
+                    e.target.classList.add('bg-brand-600', 'text-white', 'shadow-lg');
+
+                    const category = e.target.getAttribute('data-category');
+                    const searchQuery = document.getElementById('search-input').value;
+                    renderTools(category, searchQuery);
+                });
+            });
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('search-input');
+            searchInput.addEventListener('input', (e) => {
+                const activeCategory = document.querySelector('.filter-btn.bg-brand-600').getAttribute('data-category');
+                renderTools(activeCategory, e.target.value);
+            });
+
+            // Keyboard shortcut Ctrl+K
+            window.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    searchInput.focus();
+                }
+            });
+        }
+
+        // Mobile Nav Toggle
+        function setupMobileMenu() {
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+            });
+        }
+
+        function copyToClipboard(text) {
+            // Document execCommand fallback for iframe safety
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast("Copied to Clipboard", "Master prompt string ready for deployment.");
+            } catch (err) {
+                console.error("Copy failed", err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showToast(title, message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-message').innerText = message;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Submit Modal Toggle
+        function toggleSubmitModal() {
+            const modal = document.getElementById('submit-modal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) populateSubmitCategories();
+        }
+
+        function populateSubmitCategories() {
+            const select = document.getElementById('submit-category');
+            if (select.options.length) return;
+            select.innerHTML = categoriesData.map(c => `<option value="${c.slug}">${c.label}</option>`).join('');
+        }
+
+        function handleToolSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('submit-name').value;
+            const url = document.getElementById('submit-url').value;
+            const category = document.getElementById('submit-category').selectedOptions[0]?.textContent || '';
+            const desc = document.getElementById('submit-desc').value;
+
+            const subject = encodeURIComponent(`Tool submission: ${name}`);
+            const body = encodeURIComponent(`Tool name: ${name}\nWebsite: ${url}\nCategory: ${category}\nDescription: ${desc}`);
+            window.location.href = `mailto:alichatsupuort@gmail.com?subject=${subject}&body=${body}`;
+
+            toggleSubmitModal();
+            showToast("Opening Your Email App", "Send the message to complete your submission.");
+            event.target.reset();
+        }
+    </script>
+
+    <!-- Monetag verification + service worker -->
+    <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+    </script>
+    <script src="https://5gvci.com/act/files/tag.min.js?z=11811354" data-cfasync="false" async></script>
+    <script src="https://quge5.com/88/tag.min.js" data-zone="281162" async data-cfasync="false"></script>
+    <script>(function(s){s.dataset.zone='11811360',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+    <script>(function(s){s.dataset.zone='11811363',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+
+    <!-- AI chat assistant -->
+    <script src="chat-widget.js"></script>
 </body>
 </html>
