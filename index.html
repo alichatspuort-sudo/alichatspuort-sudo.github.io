@@ -370,11 +370,54 @@
                 </div>
             </div>
 
+            <!-- Interactive Prompt Generator -->
+            <div class="bg-dark-900/80 border border-brand-500/30 rounded-2xl p-5 sm:p-6 mb-6">
+                <div class="flex items-center gap-2 mb-3">
+                    <i class="fa-solid fa-wand-magic-sparkles text-brand-cyan text-sm"></i>
+                    <h3 class="text-base font-bold text-white">Blog Intro Generator Prompt</h3>
+                </div>
+                <p class="text-sm text-gray-300 bg-dark-800/90 p-3 rounded-xl border border-white/5 mb-4 leading-relaxed">
+                    Write a 200-word engaging introduction about <span id="topic-val" class="text-brand-cyan font-semibold">[Topic]</span> in a <span id="tone-val" class="text-brand-cyan font-semibold">[Tone]</span> tone.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-3 mb-4">
+                    <input type="text" id="topicInput" placeholder="Topic (e.g. AI Marketing)" oninput="updateCustomPrompt()"
+                           class="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-500/50">
+                    <select id="toneInput" onchange="updateCustomPrompt()"
+                            class="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500/50">
+                        <option value="Professional">Professional</option>
+                        <option value="Casual">Casual</option>
+                        <option value="Witty">Witty</option>
+                    </select>
+                </div>
+
+                <button onclick="copyCustomPrompt()" class="w-full py-2 rounded-xl bg-white/5 hover:bg-brand-600/30 border border-white/10 hover:border-brand-500/50 text-xs font-semibold text-gray-300 hover:text-white transition-all flex items-center justify-center gap-2">
+                    <i class="fa-regular fa-copy text-xs"></i>
+                    <span>Copy Custom Prompt</span>
+                </button>
+            </div>
+
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="prompts-grid">
                 <!-- Dynamically populated via JS -->
             </div>
         </div>
     </section>
+
+    <script>
+    function updateCustomPrompt() {
+        const topic = document.getElementById('topicInput').value || '[Topic]';
+        const tone = document.getElementById('toneInput').value;
+        document.getElementById('topic-val').innerText = topic;
+        document.getElementById('tone-val').innerText = tone;
+    }
+
+    function copyCustomPrompt() {
+        const topic = document.getElementById('topicInput').value || '[Topic]';
+        const tone = document.getElementById('toneInput').value;
+        const text = `Write a 200-word engaging introduction about ${topic} in a ${tone} tone.`;
+        copyToClipboard(text);
+    }
+    </script>
 
     <section id="insights" class="py-16 px-4 sm:px-8 max-w-7xl mx-auto">
         <div class="mb-10">
