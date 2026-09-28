@@ -1772,7 +1772,10 @@
             });
         }
 
+        let promptsShown = 24;
+        let lastPromptQuery = '';
         function renderPrompts(searchQuery = '') {
+            if (searchQuery !== lastPromptQuery) { promptsShown = 24; lastPromptQuery = searchQuery; }
             const container = document.getElementById('prompts-grid');
             container.innerHTML = '';
 
@@ -1793,7 +1796,7 @@
                 return;
             }
 
-            filtered.forEach(p => {
+            filtered.slice(0, promptsShown).forEach(p => {
                 const promptCard = document.createElement('div');
                 promptCard.className = "bg-dark-900/80 border border-white/10 rounded-2xl p-5 flex flex-col justify-between";
 
@@ -1814,6 +1817,14 @@
                 `;
                 container.appendChild(promptCard);
             });
+
+            if (filtered.length > promptsShown) {
+                const more = document.createElement('div');
+                more.className = "col-span-full text-center mt-2";
+                more.innerHTML = `<button class="px-6 py-2.5 rounded-xl bg-brand-600/30 hover:bg-brand-600/50 border border-brand-500/40 text-sm font-semibold text-white transition-all">Load more prompts (${filtered.length - promptsShown} remaining)</button>`;
+                more.querySelector('button').addEventListener('click', () => { promptsShown += 24; renderPrompts(searchQuery); });
+                container.appendChild(more);
+            }
         }
 
         // Helper to escape quotes in prompt strings
